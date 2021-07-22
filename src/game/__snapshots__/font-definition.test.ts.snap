@@ -1,0 +1,308 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parses Define statements 1`] = `
+Array [
+  Object {
+    "action": Object {
+      "type": "define",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "CharList",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": Array [
+        "A",
+        "B",
+        "C",
+      ],
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "define",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "KerningPairs",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": Array [
+        "AT",
+        "AV",
+      ],
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "define",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "WidthList",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": Array [
+        13,
+        -12,
+        1.5,
+      ],
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "define",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "OffsetList",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": Array [
+        Array [
+          -3,
+          0,
+        ],
+        Array [
+          -2,
+          0,
+        ],
+        Array [
+          -3,
+          0,
+        ],
+      ],
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "createLayer",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "Image",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": "CancunFloat14",
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "Ascent",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": 18,
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "CharWidths",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "key": Object {
+      "type": "identifier",
+      "v": "CharList",
+    },
+    "type": "map",
+    "value": Object {
+      "type": "identifier",
+      "v": "WidthList",
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "CharWidths",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "key": Object {
+      "type": "value",
+      "v": Array [
+        " ",
+      ],
+    },
+    "type": "map",
+    "value": Object {
+      "type": "value",
+      "v": Array [
+        6,
+      ],
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "KerningPairs",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "key": Object {
+      "type": "identifier",
+      "v": "KerningPairs",
+    },
+    "type": "map",
+    "value": Object {
+      "type": "identifier",
+      "v": "KerningValues",
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "ImageMap",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "key": Object {
+      "type": "identifier",
+      "v": "CharList",
+    },
+    "type": "map",
+    "value": Object {
+      "type": "identifier",
+      "v": "RectList",
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "CharOffsets",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "key": Object {
+      "type": "identifier",
+      "v": "CharList",
+    },
+    "type": "map",
+    "value": Object {
+      "type": "identifier",
+      "v": "OffsetList",
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "AscentPadding",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": 3,
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "LineSpacingOffset",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": 0,
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "PointSize",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": 14,
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "layer",
+      "v": "Tags",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": Array [
+        "This is a tag",
+      ],
+    },
+  },
+  Object {
+    "action": Object {
+      "type": "createLayer",
+    },
+    "id": Object {
+      "type": "identifier",
+      "v": "Main2",
+    },
+    "type": "single",
+  },
+  Object {
+    "action": Object {
+      "type": "set",
+      "v": "DefaultPointSize",
+    },
+    "type": "single",
+    "value": Object {
+      "type": "value",
+      "v": -3.14,
+    },
+  },
+]
+`;
