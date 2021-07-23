@@ -15,9 +15,9 @@ export default class MainMenu extends Scene {
     log("setup");
     const r = this.resources;
     this.sky = [-1, 0, 1].map(
-      (pos) => new Picture(r, r.images["images/mmsky.jpg"], 520 * pos, 0)
+      (pos) => new Picture(r, r.images["mmsky"], 520 * pos, 0)
     );
-    this.sunGlow = new Picture(r, r.images["images/_mmsunglow.jpg"], -70, -70);
+    this.sunGlow = new Picture(r, r.images["_mmsunglow"], -70, -70);
     this.sunGlow.fill([255, 255, 0]);
 
     r.getFont("Cancun10").then((cancun10) => {
@@ -44,63 +44,55 @@ export default class MainMenu extends Scene {
     return [
       ...super.setup(),
       ...this.sky,
-      new AlphaPicture(
-        r,
-        r.images["images/mmscreen.jpg"],
-        r.images["images/_mmscreen.gif"]
-      ),
+      new AlphaPicture(r, r.images["mmscreen"], r.images["_mmscreen"]),
       this.sunGlow,
+      new AlphaPicture(r, r.images["mmsun"], r.images["_mmsun"]),
       new AlphaPicture(
         r,
-        r.images["images/mmsun.gif"],
-        r.images["images/_mmsun.gif"]
-      ),
-      new AlphaPicture(
-        r,
-        r.images["images/mmeyeleft.gif"],
-        r.images["images/_mmeyeleft.gif"],
+        r.images["mmeyeleft"],
+        r.images["_mmeyeleft"],
         213,
         352
       ),
       new AlphaPicture(
         r,
-        r.images["images/mmeyeright.gif"],
-        r.images["images/_mmeyeright.gif"],
+        r.images["mmeyeright"],
+        r.images["_mmeyeright"],
         272,
         340
       ),
       new Button(
         r,
-        r.images["images/mmARCADEBUTTON.jpg"],
-        r.images["images/_mmARCADEBUTTON.gif"],
+        r.images["mmARCADEBUTTON"],
+        r.images["_mmARCADEBUTTON"],
         452,
         64
       ),
       new Button(
         r,
-        r.images["images/mmGAUNTLETBUTTON.jpg"],
-        r.images["images/_mmGAUNTLETBUTTON.gif"],
+        r.images["mmGAUNTLETBUTTON"],
+        r.images["_mmGAUNTLETBUTTON"],
         436,
         153
       ),
       new Button(
         r,
-        r.images["images/mmOPTIONSBUTTON.jpg"],
-        r.images["images/_mmOPTIONSBUTTON.gif"],
+        r.images["mmOPTIONSBUTTON"],
+        r.images["_mmOPTIONSBUTTON"],
         418,
         236
       ),
       new Button(
         r,
-        r.images["images/mmMOREGAMESBUTTON.jpg"],
-        r.images["images/_mmMOREGAMESBUTTON.gif"],
+        r.images["mmMOREGAMESBUTTON"],
+        r.images["_mmMOREGAMESBUTTON"],
         394,
         306
       ),
       new Button(
         r,
-        r.images["images/mmQUITBUTTON.jpg"],
-        r.images["images/_mmQUITBUTTON.gif"],
+        r.images["mmQUITBUTTON"],
+        r.images["_mmQUITBUTTON"],
         496,
         314
       ),

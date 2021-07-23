@@ -106,8 +106,8 @@ export default class Font {
     }
 
     const fontImageName = this.fontDefinition.layers[layer].Image;
-    const colorImage = this.resources.images[`fonts/${fontImageName}.gif`];
-    const alphaImage = this.resources.images[`fonts/_${fontImageName}.gif`];
+    const colorImage = this.resources.images[fontImageName];
+    const alphaImage = this.resources.images[`_${fontImageName}`];
     let picture: Picture;
     if (colorImage) {
       picture = new AlphaPicture(this.resources, colorImage, alphaImage);

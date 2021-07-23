@@ -10,6 +10,8 @@ type ImageLoaderEventMap = {
   error: Event;
 };
 
+const filePathRegex = /^(fonts|images|levels)\/(.+)\.(gif|jpg)$/i;
+
 export default class Resources {
   private fontDefinitions: { [fontName: string]: Font } = {};
   private freeCanvases: HTMLCanvasElement[] = [];
@@ -62,7 +64,8 @@ export default class Resources {
         }
         const image = new Image();
         image.addEventListener("load", () => {
-          this.images[filePath] = image;
+          const basename = filePath.match(filePathRegex)[2];
+          this.images[basename] = image;
           this.fs.remove(filePath);
           log("image load finished", filePath);
           resolve(image);
@@ -77,7 +80,7 @@ export default class Resources {
 
   loadAllImages(): Emitter<ImageLoaderEventMap> {
     const emitter = new Emitter<ImageLoaderEventMap>();
-    const images = this.fs.file(/^(fonts|images|levels)\/.+\.(gif|jpg)$/);
+    const images = this.fs.file(filePathRegex);
     const total = images.length;
     let loaded = 0;
 
