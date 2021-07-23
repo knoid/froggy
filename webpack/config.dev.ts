@@ -12,7 +12,7 @@ export default merge(common, {
     "dat-viewer": "./src/dat-viewer",
   },
   output: {
-    filename: "[name].js",
+    filename: "[name].bundle.js",
   },
   plugins: [
     new HtmlWebpackPlugin({
