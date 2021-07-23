@@ -6,7 +6,6 @@ const webpackConfig: Configuration = {
   mode: "development",
   devtool: "inline-source-map",
   entry: {
-    "dat-viewer": "./src/dat-viewer",
     game: "./src/game",
   },
   module: {
@@ -18,24 +17,15 @@ const webpackConfig: Configuration = {
       },
       {
         test: /\.ne$/,
-        use: resolve(__dirname, "src", "webpack-loader-nearley.js"),
+        use: resolve(__dirname, "nearley-loader.js"),
       },
     ],
   },
-  devServer: {
-    contentBase: "./build",
-  },
   output: {
     clean: true,
-    filename: "[name].bundle.js",
-    path: resolve(__dirname, "build"),
+    path: resolve(__dirname, "..", "build"),
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      chunks: ["dat-viewer"],
-      title: "Dat Viewer",
-      filename: "dat-viewer.html",
-    }),
     new HtmlWebpackPlugin({
       chunks: ["game"],
       title: "Froggy Game",
