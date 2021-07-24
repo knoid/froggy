@@ -28,17 +28,19 @@ export default async function movie(
   });
 
   function attachEventListener(type: string) {
-    canvas.addEventListener(type, ({ pageX, pageY }: MouseEvent) => {
+    document.addEventListener(type, ({ buttons, pageX, pageY }: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const x = pageX - rect.x;
       const y = pageY - rect.y;
-      scene.dispatchEvent(new MouseEvent(type, { clientX: x, clientY: y }));
+      scene.dispatchEvent(
+        new MouseEvent(type, { buttons, clientX: x, clientY: y })
+      );
     });
   }
 
-  attachEventListener("click");
   attachEventListener("mousedown");
   attachEventListener("mousemove");
+  attachEventListener("mouseout");
   attachEventListener("mouseup");
 
   await loadingScreen.loadResources();

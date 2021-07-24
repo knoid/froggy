@@ -1,4 +1,3 @@
-import { logger } from "./constants";
 import Drawable from "./Drawable";
 import Emitter from "./Emitter";
 import type Resources from "./Resources";
@@ -8,20 +7,19 @@ type EventsMap = {
   remove: Event;
 };
 
-const log = logger.extend("scene");
-
 export default abstract class Scene
   extends Emitter<EventsMap>
   implements Drawable
 {
   protected actors: Drawable[] = [];
+  protected actorHovered: Drawable = null;
 
   constructor(protected resources: Resources, public x = 0, public y = 0) {
     super();
     this.addActors(this.setup());
-    this.addEventListener("click", this.onClick);
     this.addEventListener("mousedown", this.onMouseDown);
     this.addEventListener("mousemove", this.onMouseMove);
+    this.addEventListener("mouseout", this.onMouseOut);
     this.addEventListener("mouseup", this.onMouseUp);
   }
 
@@ -41,20 +39,13 @@ export default abstract class Scene
   }
 
   isPointInside(x: number, y: number): boolean {
-    return [...this.actors]
-      .reverse()
-      .some((actor) => actor.isPointInside(x, y));
+    return !!this.findActor(x, y);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logic(timeDiff: number): void {
     // this will get overwritten by scenes
   }
-
-  onClick = this.forwardMouseEvent("click");
-  onMouseDown = this.forwardMouseEvent("mousedown");
-  onMouseMove = this.forwardMouseEvent("mousemove");
-  onMouseUp = this.forwardMouseEvent("mouseup");
 
   setup(): Drawable[] {
     return [];
@@ -65,18 +56,57 @@ export default abstract class Scene
       actor.remove();
     }
     this.dispatchEvent(new Event("remove"));
-    this.removeEventListener("click", this.onClick);
     this.removeEventListener("mousedown", this.onMouseDown);
     this.removeEventListener("mousemove", this.onMouseMove);
     this.removeEventListener("mouseup", this.onMouseUp);
   }
 
-  private forwardMouseEvent(type: string) {
-    return ({ clientX, clientY }: MouseEvent) => {
-      this.actors.forEach((actor) => {
-        const event = new MouseEvent(type, { clientX, clientY });
-        actor.dispatchEvent(event);
-      });
-    };
+  private onMouseDown = (e: MouseEvent): void => {
+    const actor = this.findActor(e.clientX, e.clientY);
+    if (actor) {
+      actor.dispatchEvent(this.newMouseEvent("mousedown", e));
+    }
+  };
+
+  private onMouseMove = (e: MouseEvent): void => {
+    if (e.buttons === 0) {
+      const actor = this.findActor(e.clientX, e.clientY);
+      if (actor && actor !== this.actorHovered) {
+        if (this.actorHovered) {
+          this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+        }
+        actor.dispatchEvent(this.newMouseEvent("mouseover", e));
+        this.actorHovered = actor;
+      }
+    }
+  };
+
+  private onMouseOut = (e: MouseEvent): void => {
+    if (this.actorHovered && e.buttons === 0) {
+      this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+    }
+  };
+
+  private onMouseUp = (e: MouseEvent): void => {
+    if (this.actorHovered) {
+      this.actorHovered.dispatchEvent(this.newMouseEvent("mouseup", e));
+      const actor = this.findActor(e.clientX, e.clientY);
+      if (this.actorHovered === actor) {
+        this.actorHovered.dispatchEvent(this.newMouseEvent("click", e));
+      } else if (actor) {
+        actor.dispatchEvent(this.newMouseEvent("mouseover", e));
+      }
+    }
+  };
+
+  private findActor(x: number, y: number): Drawable | undefined {
+    return [...this.actors]
+      .reverse()
+      .find((actor) => actor.isPointInside(x, y));
+  }
+
+  private newMouseEvent(type: string, e: MouseEvent) {
+    const { buttons, clientX, clientY } = e;
+    return new MouseEvent(type, { buttons, clientX, clientY });
   }
 }

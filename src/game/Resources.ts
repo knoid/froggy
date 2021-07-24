@@ -34,6 +34,8 @@ export default class Resources {
   }
 
   freeCanvas(context2d: CanvasRenderingContext2D): void {
+    context2d.canvas.width = 1;
+    context2d.canvas.height = 1;
     this.freeCanvases.push(context2d.canvas);
   }
 

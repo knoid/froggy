@@ -17,21 +17,22 @@ export default class Button extends Animation {
     y: number
   ) {
     super(resources, colorImage, alphaImage, x, y, 3, Orientation.horizontal);
-    this.addEventListener("mousemove", this.onMouseMove);
     this.addEventListener("mousedown", this.onMouseDown);
+    this.addEventListener("mouseout", this.onMouseOut);
+    this.addEventListener("mouseover", this.onMouseOver);
     this.addEventListener("mouseup", this.onMouseUp);
   }
 
-  onMouseDown = ({ clientX, clientY }: MouseEvent): void => {
-    this.currentFrame = this.isPointInside(clientX, clientY)
-      ? MouseState.Down
-      : MouseState.Out;
+  onMouseDown = (): void => {
+    this.currentFrame = MouseState.Down;
   };
 
-  onMouseMove = ({ clientX, clientY }: MouseEvent): void => {
-    this.currentFrame = this.isPointInside(clientX, clientY)
-      ? Math.max(this.currentFrame, MouseState.Over)
-      : MouseState.Out;
+  onMouseOut = (): void => {
+    this.currentFrame = MouseState.Out;
+  };
+
+  onMouseOver = (): void => {
+    this.currentFrame = MouseState.Over;
   };
 
   onMouseUp = ({ clientX, clientY }: MouseEvent): void => {
@@ -42,7 +43,6 @@ export default class Button extends Animation {
 
   remove(): void {
     super.remove();
-    this.removeEventListener("mousemove", this.onMouseMove);
     this.removeEventListener("mousedown", this.onMouseDown);
     this.removeEventListener("mouseup", this.onMouseUp);
   }

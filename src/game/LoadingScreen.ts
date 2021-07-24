@@ -52,11 +52,9 @@ export default class LoadingScreen extends Scene {
     this.playNow.show = this.progress === 1;
   }
 
-  onPlayNow = ({ clientX, clientY }: MouseEvent): void => {
-    if (this.playNow.isPointInside(clientX, clientY)) {
-      log("onPlayNow");
-      this.remove();
-    }
+  onPlayNow = (): void => {
+    log("onPlayNow");
+    this.remove();
   };
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -67,5 +65,6 @@ export default class LoadingScreen extends Scene {
   remove(): void {
     super.remove();
     this.loadingBar.remove();
+    this.playNow.removeEventListener("click", this.onPlayNow);
   }
 }
