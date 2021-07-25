@@ -2,6 +2,7 @@ import AlphaPicture from "./AlphaPicture";
 import Button from "./Button";
 import { logger, WIN_WIDTH } from "./constants";
 import Drawable from "./Drawable";
+import FrogEyes from "./FrogEyes";
 import Picture from "./Picture";
 import Scene from "./Scene";
 
@@ -47,20 +48,7 @@ export default class MainMenu extends Scene {
       new AlphaPicture(r, r.images["mmscreen"], r.images["_mmscreen"]),
       this.sunGlow,
       new AlphaPicture(r, r.images["mmsun"], r.images["_mmsun"]),
-      new AlphaPicture(
-        r,
-        r.images["mmeyeleft"],
-        r.images["_mmeyeleft"],
-        213,
-        352
-      ),
-      new AlphaPicture(
-        r,
-        r.images["mmeyeright"],
-        r.images["_mmeyeright"],
-        272,
-        340
-      ),
+      new FrogEyes(r, 190, 331),
       new Button(
         r,
         r.images["mmARCADEBUTTON"],
