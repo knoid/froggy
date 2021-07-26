@@ -29,7 +29,7 @@ export default class LoadingScreen extends Scene {
       349
     );
 
-    const cancunFloat14 = await r.getFont("CancunFloat14");
+    const cancunFloat14 = await r.loadFont("CancunFloat14");
     await r.loadImage("fonts/CancunFloat14.gif");
     await r.loadImage("fonts/_CancunFloat14.gif");
     this.playNow = cancunFloat14.createText(
@@ -41,7 +41,7 @@ export default class LoadingScreen extends Scene {
     this.playNow.show = false;
     this.playNow.addEventListener("click", this.onPlayNow);
 
-    const emitter = r.loadAllImages();
+    const emitter = r.loadAll();
     emitter.addEventListener("progress", this.onProgress);
 
     this.addActors([loadingScreenBackground, this.playNow]);

@@ -5,31 +5,43 @@ import Font from "./Font";
 
 const log = logger.extend("resources");
 
-type ImageLoaderEventMap = {
+type LoaderEventMap = {
   progress: ProgressEvent;
   error: Event;
 };
 
-const filePathRegex = /^(fonts|images|levels)\/(.+)\.(gif|jpg)$/i;
+const imagesPathRegex = /^(fonts|images|levels)\/(.+)\.(gif|jpg)$/i;
+const fontsPathRegex = /^(fonts)\/(.+)\.txt$/i;
 
 export default class Resources {
-  private fontDefinitions: { [fontName: string]: Font } = {};
   private freeCanvases: HTMLCanvasElement[] = [];
   public images: { [filePath: string]: HTMLImageElement } = {};
+  public fonts: { [fontName: string]: Font } = {};
 
   constructor(private fs: JSZip) {}
 
-  async getFont(fontName: string): Promise<Font> {
-    if (this.fontDefinitions[fontName]) {
-      return this.fontDefinitions[fontName];
-    }
-
-    const fontDefinitionFile = await this.fs
+  async loadFont(fontName: string): Promise<Font> {
+    log("font load start %s", fontName);
+    const fontDefinitionFileBuffer = await this.fs
       .file(`fonts/${fontName}.txt`)
-      .async("string");
+      .async("blob");
+    const fontDefinitionFile = await new Promise<string>((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", (ev) => {
+        const { result } = ev.target;
+        if (typeof result === "string") {
+          resolve(result);
+        } else {
+          reject();
+        }
+      });
+      fileReader.addEventListener("error", reject);
+      fileReader.readAsText(fontDefinitionFileBuffer, "windows1252");
+    });
 
     const font = new Font(this, fontDefinitionFile);
-    this.fontDefinitions[fontName] = font;
+    this.fonts[fontName] = font;
+    log("saved font as %s", fontName);
     return font;
   }
 
@@ -56,7 +68,7 @@ export default class Resources {
   }
 
   async loadImage(filePath: string): Promise<HTMLImageElement> {
-    log("image load start", filePath);
+    log("image load start %s", filePath);
     const blob = await this.fs.file(filePath).async("blob");
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -67,10 +79,10 @@ export default class Resources {
         }
         const image = new Image();
         image.addEventListener("load", () => {
-          const basename = filePath.match(filePathRegex)[2];
+          const basename = filePath.match(imagesPathRegex)[2];
           this.images[basename] = image;
           this.fs.remove(filePath);
-          log("image load finished", filePath);
+          log("saved image as %s", basename);
           resolve(image);
         });
         image.addEventListener("error", reject);
@@ -81,27 +93,43 @@ export default class Resources {
     });
   }
 
-  loadAllImages(): Emitter<ImageLoaderEventMap> {
-    const emitter = new Emitter<ImageLoaderEventMap>();
-    const images = this.fs.file(filePathRegex);
-    const total = images.length;
+  loadAll(): Emitter<LoaderEventMap> {
+    const emitter = new Emitter<LoaderEventMap>();
+    const images = this.fs.file(imagesPathRegex);
+    const fonts = this.fs.file(fontsPathRegex);
+    const total = images.length + fonts.length;
     let loaded = 0;
 
-    // loads one image at a time
-    images.reduce(
-      (promises, image) =>
-        // checks that all previous images were loaded before loading current one
-        Promise.resolve(promises).then(async (previousResults) => {
-          const imageElement = await this.loadImage(image.name);
-          loaded++;
-          log("progress %d out of %d", loaded, total);
-          const event = new ProgressEvent("progress", { loaded, total });
-          emitter.dispatchEvent(event);
-          return [...previousResults, imageElement];
-        }),
-      Promise.resolve([])
+    function dispatchProgress() {
+      loaded++;
+      log("progress %d out of %d", loaded, total);
+      const event = new ProgressEvent("progress", { loaded, total });
+      emitter.dispatchEvent(event);
+    }
+
+    this.serialLoader(images, async (image) => {
+      await this.loadImage(image.name);
+      dispatchProgress();
+    }).then(() =>
+      this.serialLoader(fonts, async (fontFile) => {
+        const basename = fontFile.name.match(fontsPathRegex)[2];
+        await this.loadFont(basename);
+        dispatchProgress();
+      })
     );
 
     return emitter;
+  }
+
+  private serialLoader<T, R>(array: T[], loader: (elem: T) => Promise<R>) {
+    return array.reduce(
+      (promises, element) =>
+        // checks that all previous elements are done before loading current one
+        Promise.resolve(promises).then(async (previousResults) => {
+          const newResult = await loader(element);
+          return [...previousResults, newResult];
+        }),
+      Promise.resolve([])
+    );
   }
 }

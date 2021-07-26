@@ -21,26 +21,13 @@ export default class MainMenu extends Scene {
     this.sunGlow = new Picture(r, r.images["_mmsunglow"], -70, -70);
     this.sunGlow.fill([255, 255, 0]);
 
-    r.getFont("Cancun10").then((cancun10) => {
-      const changeUser = cancun10.createText(
-        "Main",
-        "center",
-        38,
-        "(If this is not you, click here.)"
-      );
-      changeUser.fill([92, 56, 0]);
-      this.addActors([changeUser]);
-    });
-
-    r.getFont("NativeAlienExtended16").then((nativeAlienExtended16) => {
-      const welcomeText = nativeAlienExtended16.createText(
-        "Main",
-        "center",
-        -7,
-        "Welcome to Zuma, person!"
-      );
-      this.addActors([welcomeText]);
-    });
+    const changeUser = r.fonts["Cancun10"].createText(
+      "Main",
+      "center",
+      38,
+      "(If this is not you, click here.)"
+    );
+    changeUser.fill([92, 56, 0]);
 
     return [
       ...super.setup(),
@@ -48,6 +35,13 @@ export default class MainMenu extends Scene {
       new AlphaPicture(r, r.images["mmscreen"], r.images["_mmscreen"]),
       this.sunGlow,
       new AlphaPicture(r, r.images["mmsun"], r.images["_mmsun"]),
+      r.fonts["NativeAlienExtended16"].createText(
+        "Main",
+        "center",
+        -7,
+        "Welcome to Zuma, person!"
+      ),
+      changeUser,
       new FrogEyes(r, 190, 331),
       new Button(
         r,
