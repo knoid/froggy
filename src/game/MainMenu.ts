@@ -3,12 +3,15 @@ import Button from "./Button";
 import { logger, WIN_WIDTH } from "./constants";
 import Drawable from "./Drawable";
 import FrogEyes from "./FrogEyes";
+import OptionsDialog from "./OptionsDialog";
 import Picture from "./Picture";
 import Scene from "./Scene";
 
 const log = logger.extend("mainmenu");
 
 export default class MainMenu extends Scene {
+  private optionsButton: Button;
+  private optionsDialog: OptionsDialog;
   private sky: Picture[];
   private sunGlow: Picture;
 
@@ -28,6 +31,18 @@ export default class MainMenu extends Scene {
       "(If this is not you, click here.)"
     );
     changeUser.fill([92, 56, 0]);
+
+    this.optionsDialog = new OptionsDialog(r);
+    this.optionsButton = new Button(
+      r,
+      r.images["mmOPTIONSBUTTON"],
+      r.images["_mmOPTIONSBUTTON"],
+      418,
+      236
+    );
+    this.optionsButton.addEventListener("click", () => {
+      this.optionsDialog.show = true;
+    });
 
     return [
       ...super.setup(),
@@ -57,13 +72,7 @@ export default class MainMenu extends Scene {
         436,
         153
       ),
-      new Button(
-        r,
-        r.images["mmOPTIONSBUTTON"],
-        r.images["_mmOPTIONSBUTTON"],
-        418,
-        236
-      ),
+      this.optionsButton,
       new Button(
         r,
         r.images["mmMOREGAMESBUTTON"],
@@ -78,6 +87,7 @@ export default class MainMenu extends Scene {
         496,
         314
       ),
+      this.optionsDialog,
     ];
   }
 

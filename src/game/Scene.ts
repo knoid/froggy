@@ -20,6 +20,7 @@ export default abstract class Scene
     this.addEventListener("mousedown", this.onMouseDown);
     this.addEventListener("mousemove", this.onMouseMove);
     this.addEventListener("mouseout", this.onMouseOut);
+    this.addEventListener("mouseover", this.onMouseOver);
     this.addEventListener("mouseup", this.onMouseUp);
   }
 
@@ -58,6 +59,8 @@ export default abstract class Scene
     this.dispatchEvent(new Event("remove"));
     this.removeEventListener("mousedown", this.onMouseDown);
     this.removeEventListener("mousemove", this.onMouseMove);
+    this.removeEventListener("mouseout", this.onMouseOut);
+    this.removeEventListener("mouseover", this.onMouseOver);
     this.removeEventListener("mouseup", this.onMouseUp);
   }
 
@@ -71,12 +74,15 @@ export default abstract class Scene
   private onMouseMove = (e: MouseEvent): void => {
     if (e.buttons === 0) {
       const actor = this.findActor(e.clientX, e.clientY);
-      if (actor && actor !== this.actorHovered) {
-        if (this.actorHovered) {
-          this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+      if (actor) {
+        actor.dispatchEvent(this.newMouseEvent("mousemove", e));
+        if (actor !== this.actorHovered) {
+          if (this.actorHovered) {
+            this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+          }
+          actor.dispatchEvent(this.newMouseEvent("mouseover", e));
+          this.actorHovered = actor;
         }
-        actor.dispatchEvent(this.newMouseEvent("mouseover", e));
-        this.actorHovered = actor;
       }
     }
   };
@@ -84,6 +90,14 @@ export default abstract class Scene
   private onMouseOut = (e: MouseEvent): void => {
     if (this.actorHovered && e.buttons === 0) {
       this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+      this.actorHovered = null;
+    }
+  };
+
+  private onMouseOver = (e: MouseEvent): void => {
+    const actor = this.findActor(e.clientX, e.clientY);
+    if (actor) {
+      actor.dispatchEvent(this.newMouseEvent("mouseover", e));
     }
   };
 
@@ -99,7 +113,7 @@ export default abstract class Scene
     }
   };
 
-  private findActor(x: number, y: number): Drawable | undefined {
+  protected findActor(x: number, y: number): Drawable | undefined {
     return [...this.actors]
       .reverse()
       .find((actor) => actor.isPointInside(x, y));
