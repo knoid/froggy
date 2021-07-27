@@ -76,10 +76,13 @@ export default abstract class Scene
       const actor = this.findActor(e.clientX, e.clientY);
       if (actor) {
         actor.dispatchEvent(this.newMouseEvent("mousemove", e));
-        if (actor !== this.actorHovered) {
-          if (this.actorHovered) {
-            this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
-          }
+      }
+      if (actor !== this.actorHovered) {
+        if (this.actorHovered) {
+          this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+          this.actorHovered = null;
+        }
+        if (actor) {
           actor.dispatchEvent(this.newMouseEvent("mouseover", e));
           this.actorHovered = actor;
         }

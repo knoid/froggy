@@ -1,7 +1,7 @@
 import Animation, { Orientation } from "./Animation";
 import Resources from "./Resources";
 
-enum MouseState {
+export enum MouseState {
   Out,
   Over,
   Down,

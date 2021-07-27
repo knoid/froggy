@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button, { MouseState } from "./Button";
 import Resources from "./Resources";
 import TextPicture from "./TextPicture";
 
@@ -22,12 +22,10 @@ export default class DialogButton extends Button {
     );
 
     const text = resources.fonts["Cancun10"].createText("Main", 0, 12, label);
+    text.fill([210, 227, 32]);
     text.x = (width - text.width) / 2;
     this.text = text;
     this.expandedWidth = width;
-
-    this.addEventListener("mouseover", () => console.log("DialogButton over"));
-    this.addEventListener("mouseout", () => console.log("DialogButton out"));
   }
 
   get width(): number {
@@ -43,6 +41,9 @@ export default class DialogButton extends Button {
       super.draw(ctx, 40, 0, 40, 48, i, 0);
     }
 
+    if (this.currentFrame === MouseState.Down) {
+      ctx.translate(-1, 1);
+    }
     this.text.draw(ctx);
     ctx.restore();
   }

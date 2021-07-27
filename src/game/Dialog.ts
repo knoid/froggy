@@ -15,7 +15,7 @@ export default abstract class Dialog extends Scene implements Drawable {
     resources: Resources,
     private width: number,
     private height: number,
-    private title: string
+    title: string
   ) {
     super(resources, 0, 0);
     this.setSize();

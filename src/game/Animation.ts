@@ -44,10 +44,11 @@ export default class Animation extends AlphaPicture {
   ): void {
     let frameX = 0;
     let frameY = 0;
+    const factor = Math.floor(this.currentFrame) / this.framesCount;
     if (this.orientation === Orientation.vertical) {
-      frameY = this.height * Math.floor(this.currentFrame);
+      frameY = super.height * factor;
     } else {
-      frameX = this.width * Math.floor(this.currentFrame);
+      frameX = super.width * factor;
     }
     super.draw(ctx, frameX + sx, frameY + sy, width, height, x, y);
   }
