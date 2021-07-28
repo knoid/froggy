@@ -116,8 +116,4 @@ export default abstract class Dialog extends Scene implements Drawable {
     super.remove();
     this.background.remove();
   }
-
-  protected findActor(x: number, y: number): Drawable | undefined {
-    return super.findActor(x - this.x, y - this.y);
-  }
 }

@@ -10,12 +10,18 @@ type EventsMap = {
 type ImageSource = HTMLImageElement | HTMLCanvasElement;
 type RGB = [number, number, number];
 
+export enum PointerEvents {
+  All,
+  None,
+}
+
 const log = logger.extend("picture");
 
 export default class Picture extends Emitter<EventsMap> implements Drawable {
   center: Coords2D;
   rotation = 0;
   show = true;
+  pointerEvents = PointerEvents.All;
   protected context2d: CanvasRenderingContext2D | null = null;
 
   constructor(
@@ -38,6 +44,7 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
 
   isPointInside(x: number, y: number): boolean {
     return (
+      this.pointerEvents === PointerEvents.All &&
       this.show &&
       this.x < x &&
       x < this.x + this.width &&

@@ -12,7 +12,7 @@ export default abstract class Scene
   implements Drawable
 {
   protected actors: Drawable[] = [];
-  protected actorHovered: Drawable = null;
+  protected actorHovered: Drawable | null = null;
 
   constructor(protected resources: Resources, public x = 0, public y = 0) {
     super();
@@ -72,7 +72,11 @@ export default abstract class Scene
   };
 
   private onMouseMove = (e: MouseEvent): void => {
-    if (e.buttons === 0) {
+    if (e.buttons > 0) {
+      if (this.actorHovered) {
+        this.actorHovered.dispatchEvent(this.newMouseEvent("mousemove", e));
+      }
+    } else {
       const actor = this.findActor(e.clientX, e.clientY);
       if (actor) {
         actor.dispatchEvent(this.newMouseEvent("mousemove", e));
@@ -117,13 +121,18 @@ export default abstract class Scene
   };
 
   protected findActor(x: number, y: number): Drawable | undefined {
+    const relativeX = x - this.x;
+    const relativeY = y - this.y;
     return [...this.actors]
       .reverse()
-      .find((actor) => actor.isPointInside(x, y));
+      .find((actor) => actor.isPointInside(relativeX, relativeY));
   }
 
   private newMouseEvent(type: string, e: MouseEvent) {
-    const { buttons, clientX, clientY } = e;
-    return new MouseEvent(type, { buttons, clientX, clientY });
+    return new MouseEvent(type, {
+      buttons: e.buttons,
+      clientX: e.clientX - this.x,
+      clientY: e.clientY - this.y,
+    });
   }
 }
