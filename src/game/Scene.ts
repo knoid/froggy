@@ -16,7 +16,6 @@ export default abstract class Scene
 
   constructor(protected resources: Resources, public x = 0, public y = 0) {
     super();
-    this.addActors(this.setup());
     this.addEventListener("mousedown", this.onMouseDown);
     this.addEventListener("mousemove", this.onMouseMove);
     this.addEventListener("mouseout", this.onMouseOut);
@@ -46,10 +45,6 @@ export default abstract class Scene
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logic(timeDiff: number): void {
     // this will get overwritten by scenes
-  }
-
-  setup(): Drawable[] {
-    return [];
   }
 
   remove(): void {

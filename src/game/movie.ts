@@ -1,6 +1,5 @@
 import { logger, WIN_HEIGHT, WIN_WIDTH } from "./constants";
 import LoadingScreen from "./LoadingScreen";
-import MainMenu from "./MainMenu";
 import Resources from "./Resources";
 import Scene from "./Scene";
 
@@ -21,11 +20,15 @@ export default async function movie(
   // 'global' variables
   let lastTime = 0;
   let scene: Scene = loadingScreen;
-  scene.addEventListener("remove", async () => {
-    // scene.remove();
-    scene = new MainMenu(r);
+
+  function listenSceneChange(e: CustomEvent<Scene>) {
+    scene.removeEventListener("sceneChange", listenSceneChange);
+    scene.remove();
+    scene = e.detail;
     log("scene change", scene);
-  });
+    scene.addEventListener("sceneChange", listenSceneChange);
+  }
+  scene.addEventListener("sceneChange", listenSceneChange);
 
   function attachEventListener(type: string) {
     document.addEventListener(type, ({ buttons, pageX, pageY }: MouseEvent) => {

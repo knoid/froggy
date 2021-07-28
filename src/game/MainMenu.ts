@@ -5,9 +5,8 @@ import Drawable from "./Drawable";
 import FrogEyes from "./FrogEyes";
 import OptionsDialog from "./OptionsDialog";
 import Picture from "./Picture";
+import Resources from "./Resources";
 import Scene from "./Scene";
-
-const log = logger.extend("mainmenu");
 
 export default class MainMenu extends Scene {
   private optionsButton: Button;
@@ -15,8 +14,8 @@ export default class MainMenu extends Scene {
   private sky: Picture[];
   private sunGlow: Picture;
 
-  setup(): Drawable[] {
-    log("setup");
+  constructor(resources: Resources) {
+    super(resources);
     const r = this.resources;
     this.sky = [-1, 0, 1].map(
       (pos) => new Picture(r, r.images["mmsky"], 520 * pos, 0)
@@ -40,12 +39,9 @@ export default class MainMenu extends Scene {
       418,
       236
     );
-    this.optionsButton.addEventListener("click", () => {
-      this.optionsDialog.show = true;
-    });
+    this.optionsButton.addEventListener("click", this.onOptionsButtonClick);
 
-    return [
-      ...super.setup(),
+    this.addActors([
       ...this.sky,
       new AlphaPicture(r, r.images["mmscreen"], r.images["_mmscreen"]),
       this.sunGlow,
@@ -88,7 +84,7 @@ export default class MainMenu extends Scene {
         314
       ),
       this.optionsDialog,
-    ];
+    ]);
   }
 
   logic(timeDiff: number): void {
@@ -101,4 +97,13 @@ export default class MainMenu extends Scene {
 
     this.sunGlow.addRotation(timeDiff * 0.0008);
   }
+
+  remove(): void {
+    super.remove();
+    this.optionsButton.removeEventListener("click", this.onOptionsButtonClick);
+  }
+
+  private onOptionsButtonClick = () => {
+    this.optionsDialog.show = true;
+  };
 }

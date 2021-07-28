@@ -1,5 +1,6 @@
 import AlphaPicture from "./AlphaPicture";
 import { logger } from "./constants";
+import MainMenu from "./MainMenu";
 import Picture from "./Picture";
 import Scene from "./Scene";
 
@@ -54,7 +55,9 @@ export default class LoadingScreen extends Scene {
 
   onPlayNow = (): void => {
     log("onPlayNow");
-    this.remove();
+    this.dispatchEvent(
+      new CustomEvent("sceneChange", { detail: new MainMenu(this.resources) })
+    );
   };
 
   draw(ctx: CanvasRenderingContext2D): void {
