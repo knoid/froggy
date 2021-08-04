@@ -1,7 +1,7 @@
 import AlphaPicture from "./AlphaPicture";
+import ArcadeMenu from "./ArcadeMenu";
 import Button from "./Button";
-import { logger, WIN_WIDTH } from "./constants";
-import Drawable from "./Drawable";
+import { WIN_WIDTH } from "./constants";
 import FrogEyes from "./FrogEyes";
 import OptionsDialog from "./OptionsDialog";
 import Picture from "./Picture";
@@ -9,6 +9,7 @@ import Resources from "./Resources";
 import Scene from "./Scene";
 
 export default class MainMenu extends Scene {
+  private adventureButton: Button;
   private optionsButton: Button;
   private optionsDialog: OptionsDialog;
   private sky: Picture[];
@@ -17,8 +18,8 @@ export default class MainMenu extends Scene {
   constructor(resources: Resources) {
     super(resources);
     const r = this.resources;
-    this.sky = [-1, 0, 1].map((pos) => new Picture(r, "mmsky", 520 * pos, 0));
-    this.sunGlow = new Picture(r, "_mmsunglow", -70, -70);
+    this.sky = [-1, 0, 1].map((pos) => new Picture(r, "mmSky", 520 * pos, 0));
+    this.sunGlow = new Picture(r, "_mmSunGlow", -70, -70);
     this.sunGlow.fill([255, 255, 0]);
 
     const changeUser = r.fonts["Cancun10"].createText(
@@ -29,11 +30,20 @@ export default class MainMenu extends Scene {
     );
     changeUser.fill([92, 56, 0]);
 
+    this.adventureButton = new Button(
+      r,
+      "mmArcadeButton",
+      "_mmArcadeButton",
+      452,
+      64
+    );
+    this.adventureButton.addEventListener("click", this.onAdventureButtonClick);
+
     this.optionsDialog = new OptionsDialog(r);
     this.optionsButton = new Button(
       r,
-      "mmOPTIONSBUTTON",
-      "_mmOPTIONSBUTTON",
+      "mmOptionsButton",
+      "_mmOptionsButton",
       418,
       236
     );
@@ -41,9 +51,9 @@ export default class MainMenu extends Scene {
 
     this.addActors([
       ...this.sky,
-      new AlphaPicture(r, "mmscreen", "_mmscreen"),
+      new AlphaPicture(r, "mmScreen", "_mmScreen"),
       this.sunGlow,
-      new AlphaPicture(r, "mmsun", "_mmsun"),
+      new AlphaPicture(r, "mmSun", "_mmSun"),
       r.fonts["NativeAlienExtended16"].createText(
         "Main",
         "center",
@@ -52,11 +62,11 @@ export default class MainMenu extends Scene {
       ),
       changeUser,
       new FrogEyes(r, 190, 331),
-      new Button(r, "mmARCADEBUTTON", "_mmARCADEBUTTON", 452, 64),
-      new Button(r, "mmGAUNTLETBUTTON", "_mmGAUNTLETBUTTON", 436, 153),
+      this.adventureButton,
+      new Button(r, "mmGauntletButton", "_mmGauntletButton", 436, 153),
       this.optionsButton,
-      new Button(r, "mmMOREGAMESBUTTON", "_mmMOREGAMESBUTTON", 394, 306),
-      new Button(r, "mmQUITBUTTON", "_mmQUITBUTTON", 496, 314),
+      new Button(r, "mmMoreGamesButton", "_mmMoreGamesButton", 394, 306),
+      new Button(r, "mmQuitButton", "_mmQuitButton", 496, 314),
       this.optionsDialog,
     ]);
   }
@@ -65,7 +75,7 @@ export default class MainMenu extends Scene {
     for (const sky of this.sky) {
       sky.x += timeDiff * 0.02;
       if (sky.x > WIN_WIDTH) {
-        sky.x -= 520 * 3;
+        sky.x -= sky.width * 3;
       }
     }
 
@@ -74,8 +84,18 @@ export default class MainMenu extends Scene {
 
   remove(): void {
     super.remove();
+    this.adventureButton.removeEventListener(
+      "click",
+      this.onAdventureButtonClick
+    );
     this.optionsButton.removeEventListener("click", this.onOptionsButtonClick);
   }
+
+  private onAdventureButtonClick = () => {
+    this.dispatchEvent(
+      new CustomEvent("sceneChange", { detail: new ArcadeMenu(this.resources) })
+    );
+  };
 
   private onOptionsButtonClick = () => {
     this.optionsDialog.show = true;

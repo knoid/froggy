@@ -15,10 +15,14 @@ const fontsPathRegex = /^(fonts)\/(.+)\.txt$/i;
 
 export default class Resources {
   private freeCanvases: HTMLCanvasElement[] = [];
-  public images: { [filePath: string]: HTMLImageElement } = {};
+  private images: { [filePath: string]: HTMLImageElement } = {};
   public fonts: { [fontName: string]: Font } = {};
 
   constructor(private fs: JSZip) {}
+
+  image(name: string): HTMLImageElement {
+    return this.images[name.toLowerCase()];
+  }
 
   async loadFont(fontName: string): Promise<Font> {
     log("font load start %s", fontName);
@@ -80,7 +84,7 @@ export default class Resources {
         const image = new Image();
         image.addEventListener("load", () => {
           const basename = filePath.match(imagesPathRegex)[2];
-          this.images[basename] = image;
+          this.images[basename.toLowerCase()] = image;
           this.fs.remove(filePath);
           log("saved image as %s", basename);
           resolve(image);

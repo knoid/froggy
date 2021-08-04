@@ -13,9 +13,7 @@ export default class AlphaPicture extends Picture {
 
     const { width, height } = this.image;
     const alphaImageImage =
-      typeof alphaImage === "string"
-        ? resources.images[alphaImage]
-        : alphaImage;
+      typeof alphaImage === "string" ? resources.image(alphaImage) : alphaImage;
 
     const alphaContext = resources.getCanvas(width, height);
     alphaContext.drawImage(alphaImageImage, 0, 0);

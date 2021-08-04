@@ -49,9 +49,9 @@ export default async function movie(
   await loadingScreen.loadResources();
 
   function drawLoading(timestamp: number) {
-    const timediff = timestamp - lastTime;
+    const timeDiff = timestamp - lastTime;
     lastTime = timestamp;
-    scene.logic(timediff);
+    scene.logic(timeDiff);
     scene.draw(mainCtx);
     requestAnimationFrame(drawLoading);
   }

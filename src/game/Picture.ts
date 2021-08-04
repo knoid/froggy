@@ -32,7 +32,7 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
     public y = 0
   ) {
     super();
-    this.image = typeof image === "string" ? resources.images[image] : image;
+    this.image = typeof image === "string" ? resources.image(image) : image;
     this.center = [this.width / 2, this.height / 2];
   }
 

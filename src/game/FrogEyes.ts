@@ -15,10 +15,10 @@ export default class FrogEyes extends Emitter implements Drawable {
     public y: number
   ) {
     super();
-    const { width, height } = this.resources.images["_mmeyemask"];
+    const { width, height } = this.resources.image("_mmEyeMask");
     const r = resources;
-    this.leftEye = new AlphaPicture(r, "mmeyeleft", "_mmeyeleft", 20, 27);
-    this.rightEye = new AlphaPicture(r, "mmeyeright", "_mmeyeright", 78, 17);
+    this.leftEye = new AlphaPicture(r, "mmEyeLeft", "_mmEyeLeft", 20, 27);
+    this.rightEye = new AlphaPicture(r, "mmEyeRight", "_mmEyeRight", 78, 17);
 
     const context = r.getCanvas(width, height);
     this.leftEye.draw(context);
@@ -30,7 +30,7 @@ export default class FrogEyes extends Emitter implements Drawable {
   }
 
   private getMaskImage() {
-    const eyesMask = this.resources.images["_mmeyemask"];
+    const eyesMask = this.resources.image("_mmEyeMask");
     const { width, height } = eyesMask;
     const context = this.resources.getCanvas(width, height);
     context.drawImage(eyesMask, 0, 0);

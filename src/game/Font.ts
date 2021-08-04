@@ -106,7 +106,7 @@ export default class Font {
     }
 
     const fontImageName = this.fontDefinition.layers[layer].Image;
-    const colorImage = this.resources.images[fontImageName];
+    const colorImage = this.resources.image(fontImageName);
     const alphaImage = `_${fontImageName}`;
     let picture: Picture;
     if (colorImage) {

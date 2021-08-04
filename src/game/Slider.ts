@@ -20,8 +20,8 @@ export default class Slider extends Scene {
 
     this.track = new AlphaPicture(
       resources,
-      "slidertrack",
-      "_slidertrack",
+      "sliderTrack",
+      "_sliderTrack",
       -45,
       0
     );
@@ -31,8 +31,8 @@ export default class Slider extends Scene {
 
     this.thumb = new AlphaPicture(
       resources,
-      "SliderThumb",
-      "_SliderThumb",
+      "sliderThumb",
+      "_sliderThumb",
       SliderMinX,
       0
     );
