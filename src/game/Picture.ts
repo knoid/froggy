@@ -23,14 +23,16 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
   show = true;
   pointerEvents = PointerEvents.All;
   protected context2d: CanvasRenderingContext2D | null = null;
+  protected image: ImageSource;
 
   constructor(
     protected resources: Resources,
-    protected image: ImageSource,
+    image: string | ImageSource,
     public x = 0,
     public y = 0
   ) {
     super();
+    this.image = typeof image === "string" ? resources.images[image] : image;
     this.center = [this.width / 2, this.height / 2];
   }
 

@@ -11,8 +11,8 @@ export default class Animation extends AlphaPicture {
 
   constructor(
     resources: Resources,
-    colorImage: HTMLImageElement,
-    alphaImage: HTMLImageElement,
+    colorImage: string | HTMLImageElement,
+    alphaImage: string | HTMLImageElement,
     x: number,
     y: number,
     protected framesCount: number,

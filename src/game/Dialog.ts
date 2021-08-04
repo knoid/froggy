@@ -28,11 +28,7 @@ export default abstract class Dialog extends Scene implements Drawable {
     );
     titleFont.x = (width - titleFont.width) / 2;
 
-    this.background = new AlphaPicture(
-      resources,
-      this.resources.images["dialogbox"],
-      this.resources.images["_dialogbox"]
-    );
+    this.background = new AlphaPicture(resources, "dialogbox", "_dialogbox");
 
     this.addActors([titleFont]);
   }

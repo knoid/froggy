@@ -11,8 +11,8 @@ export enum MouseState {
 export default class Button extends Animation {
   constructor(
     resources: Resources,
-    colorImage: HTMLImageElement,
-    alphaImage: HTMLImageElement,
+    colorImage: string | HTMLImageElement,
+    alphaImage: string | HTMLImageElement,
     x: number,
     y: number
   ) {

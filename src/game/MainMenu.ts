@@ -17,10 +17,8 @@ export default class MainMenu extends Scene {
   constructor(resources: Resources) {
     super(resources);
     const r = this.resources;
-    this.sky = [-1, 0, 1].map(
-      (pos) => new Picture(r, r.images["mmsky"], 520 * pos, 0)
-    );
-    this.sunGlow = new Picture(r, r.images["_mmsunglow"], -70, -70);
+    this.sky = [-1, 0, 1].map((pos) => new Picture(r, "mmsky", 520 * pos, 0));
+    this.sunGlow = new Picture(r, "_mmsunglow", -70, -70);
     this.sunGlow.fill([255, 255, 0]);
 
     const changeUser = r.fonts["Cancun10"].createText(
@@ -34,8 +32,8 @@ export default class MainMenu extends Scene {
     this.optionsDialog = new OptionsDialog(r);
     this.optionsButton = new Button(
       r,
-      r.images["mmOPTIONSBUTTON"],
-      r.images["_mmOPTIONSBUTTON"],
+      "mmOPTIONSBUTTON",
+      "_mmOPTIONSBUTTON",
       418,
       236
     );
@@ -43,9 +41,9 @@ export default class MainMenu extends Scene {
 
     this.addActors([
       ...this.sky,
-      new AlphaPicture(r, r.images["mmscreen"], r.images["_mmscreen"]),
+      new AlphaPicture(r, "mmscreen", "_mmscreen"),
       this.sunGlow,
-      new AlphaPicture(r, r.images["mmsun"], r.images["_mmsun"]),
+      new AlphaPicture(r, "mmsun", "_mmsun"),
       r.fonts["NativeAlienExtended16"].createText(
         "Main",
         "center",
@@ -54,35 +52,11 @@ export default class MainMenu extends Scene {
       ),
       changeUser,
       new FrogEyes(r, 190, 331),
-      new Button(
-        r,
-        r.images["mmARCADEBUTTON"],
-        r.images["_mmARCADEBUTTON"],
-        452,
-        64
-      ),
-      new Button(
-        r,
-        r.images["mmGAUNTLETBUTTON"],
-        r.images["_mmGAUNTLETBUTTON"],
-        436,
-        153
-      ),
+      new Button(r, "mmARCADEBUTTON", "_mmARCADEBUTTON", 452, 64),
+      new Button(r, "mmGAUNTLETBUTTON", "_mmGAUNTLETBUTTON", 436, 153),
       this.optionsButton,
-      new Button(
-        r,
-        r.images["mmMOREGAMESBUTTON"],
-        r.images["_mmMOREGAMESBUTTON"],
-        394,
-        306
-      ),
-      new Button(
-        r,
-        r.images["mmQUITBUTTON"],
-        r.images["_mmQUITBUTTON"],
-        496,
-        314
-      ),
+      new Button(r, "mmMOREGAMESBUTTON", "_mmMOREGAMESBUTTON", 394, 306),
+      new Button(r, "mmQUITBUTTON", "_mmQUITBUTTON", 496, 314),
       this.optionsDialog,
     ]);
   }
