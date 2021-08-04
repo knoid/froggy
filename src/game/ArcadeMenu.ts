@@ -18,21 +18,15 @@ export default class ArcadeMenu extends Scene {
       new Picture(resources, "advSky", 0, 0),
     ];
 
-    this.mainMenuButton = new Button(
-      resources,
-      "advMainMenuButton",
-      "_advMainMenuButton",
-      0,
-      438
-    );
+    this.mainMenuButton = new Button(resources, "advMainMenuButton", 0, 438);
     this.mainMenuButton.addEventListener("click", this.onMainMenuButtonClick);
 
     this.addActors([
       ...this.sky,
-      new AlphaPicture(resources, "advBack", "_advBack", 0, 0),
-      new AlphaPicture(resources, "advTemple3", "_advTemple3", 395, 115),
-      new AlphaPicture(resources, "advTemple2", "_advTemple2", 0, 115),
-      new AlphaPicture(resources, "advTemple1", "_advTemple1", 0, 188),
+      new AlphaPicture(resources, "advBack", 0, 0),
+      new AlphaPicture(resources, "advTemple3", 395, 115),
+      new AlphaPicture(resources, "advTemple2", 0, 115),
+      new AlphaPicture(resources, "advTemple1", 0, 188),
       new Picture(resources, "advStage", 289, 381),
 
       // new Door(resources, "advDoor1A", 226, 300, 1, 'TEMPLE OF ZUKULKAN', true),
@@ -45,10 +39,10 @@ export default class ArcadeMenu extends Scene {
       // new Door(resources, "advDoor3B", 508, 144, 8, 'POPO POYOLLI'),
       // new Door(resources, "advDoor3C", 567, 145, 9, 'POPO POYOLLI'),
 
-      new AlphaPicture(resources, "advTitle", "_advTitle", 0, 0),
-      new AlphaPicture(resources, "advHighScore", "_advHighScore", 456, 0),
+      new AlphaPicture(resources, "advTitle", 0, 0),
+      new AlphaPicture(resources, "advHighScore", 456, 0),
       this.mainMenuButton,
-      new Button(resources, "advPlayButton", "_advPlayButton", 543, 441),
+      new Button(resources, "advPlayButton", 543, 441),
     ]);
   }
 

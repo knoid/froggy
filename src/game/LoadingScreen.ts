@@ -17,18 +17,12 @@ export default class LoadingScreen extends Scene {
 
   async loadResources(): Promise<void> {
     const r = this.resources;
-    const loadingScreenImage = await r.loadImage("images/loadingscreen.jpg");
-    const loadingScreenBackground = new Picture(r, loadingScreenImage);
+    await r.loadImage("images/loadingscreen.jpg");
+    const loadingScreenBackground = new Picture(r, "loadingScreen");
 
-    const loadingBarImage = await r.loadImage("images/LoaderBar.gif");
-    const loadingBarAlphaImage = await r.loadImage("images/_LoaderBar.gif");
-    this.loadingBar = new AlphaPicture(
-      r,
-      loadingBarImage,
-      loadingBarAlphaImage,
-      129,
-      349
-    );
+    await r.loadImage("images/LoaderBar.gif");
+    await r.loadImage("images/_LoaderBar.gif");
+    this.loadingBar = new AlphaPicture(r, "loaderBar", 129, 349);
 
     const cancunFloat14 = await r.loadFont("CancunFloat14");
     await r.loadImage("fonts/CancunFloat14.gif");

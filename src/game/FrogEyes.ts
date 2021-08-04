@@ -17,8 +17,8 @@ export default class FrogEyes extends Emitter implements Drawable {
     super();
     const { width, height } = this.resources.image("_mmEyeMask");
     const r = resources;
-    this.leftEye = new AlphaPicture(r, "mmEyeLeft", "_mmEyeLeft", 20, 27);
-    this.rightEye = new AlphaPicture(r, "mmEyeRight", "_mmEyeRight", 78, 17);
+    this.leftEye = new AlphaPicture(r, "mmEyeLeft", 20, 27);
+    this.rightEye = new AlphaPicture(r, "mmEyeRight", 78, 17);
 
     const context = r.getCanvas(width, height);
     this.leftEye.draw(context);

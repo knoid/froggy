@@ -18,24 +18,12 @@ export default class Slider extends Scene {
     text.fill([210, 227, 32]);
     text.x -= text.width;
 
-    this.track = new AlphaPicture(
-      resources,
-      "sliderTrack",
-      "_sliderTrack",
-      -45,
-      0
-    );
+    this.track = new AlphaPicture(resources, "sliderTrack", -45, 0);
     this.track.addEventListener("mousedown", this.onTrackDown);
     this.track.addEventListener("mousemove", this.onTrackMove);
     this.track.addEventListener("mouseup", this.onTrackUp);
 
-    this.thumb = new AlphaPicture(
-      resources,
-      "sliderThumb",
-      "_sliderThumb",
-      SliderMinX,
-      0
-    );
+    this.thumb = new AlphaPicture(resources, "sliderThumb", SliderMinX, 0);
     this.thumb.pointerEvents = PointerEvents.None;
 
     this.addActors([text, this.track, this.thumb]);

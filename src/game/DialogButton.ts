@@ -13,7 +13,7 @@ export default class DialogButton extends Button {
     width: number,
     label: string
   ) {
-    super(resources, "dialogButton", "_dialogButton", x, y);
+    super(resources, "dialogButton", x, y);
 
     const text = resources.fonts["Cancun10"].createText("Main", 0, 12, label);
     text.fill([210, 227, 32]);

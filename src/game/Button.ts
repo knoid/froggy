@@ -9,14 +9,8 @@ export enum MouseState {
 }
 
 export default class Button extends Animation {
-  constructor(
-    resources: Resources,
-    colorImage: string | HTMLImageElement,
-    alphaImage: string | HTMLImageElement,
-    x: number,
-    y: number
-  ) {
-    super(resources, colorImage, alphaImage, x, y, 3, Orientation.horizontal);
+  constructor(resources: Resources, colorImage: string, x: number, y: number) {
+    super(resources, colorImage, x, y, 3, Orientation.horizontal);
     this.addEventListener("mousedown", this.onMouseDown);
     this.addEventListener("mouseout", this.onMouseOut);
     this.addEventListener("mouseover", this.onMouseOver);

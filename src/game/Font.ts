@@ -110,7 +110,7 @@ export default class Font {
     const alphaImage = `_${fontImageName}`;
     let picture: Picture;
     if (colorImage) {
-      picture = new AlphaPicture(this.resources, colorImage, alphaImage);
+      picture = new AlphaPicture(this.resources, fontImageName);
     } else {
       picture = new Picture(this.resources, alphaImage);
     }

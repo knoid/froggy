@@ -30,30 +30,18 @@ export default class MainMenu extends Scene {
     );
     changeUser.fill([92, 56, 0]);
 
-    this.adventureButton = new Button(
-      r,
-      "mmArcadeButton",
-      "_mmArcadeButton",
-      452,
-      64
-    );
+    this.adventureButton = new Button(r, "mmArcadeButton", 452, 64);
     this.adventureButton.addEventListener("click", this.onAdventureButtonClick);
 
     this.optionsDialog = new OptionsDialog(r);
-    this.optionsButton = new Button(
-      r,
-      "mmOptionsButton",
-      "_mmOptionsButton",
-      418,
-      236
-    );
+    this.optionsButton = new Button(r, "mmOptionsButton", 418, 236);
     this.optionsButton.addEventListener("click", this.onOptionsButtonClick);
 
     this.addActors([
       ...this.sky,
-      new AlphaPicture(r, "mmScreen", "_mmScreen"),
+      new AlphaPicture(r, "mmScreen"),
       this.sunGlow,
-      new AlphaPicture(r, "mmSun", "_mmSun"),
+      new AlphaPicture(r, "mmSun"),
       r.fonts["NativeAlienExtended16"].createText(
         "Main",
         "center",
@@ -63,10 +51,10 @@ export default class MainMenu extends Scene {
       changeUser,
       new FrogEyes(r, 190, 331),
       this.adventureButton,
-      new Button(r, "mmGauntletButton", "_mmGauntletButton", 436, 153),
+      new Button(r, "mmGauntletButton", 436, 153),
       this.optionsButton,
-      new Button(r, "mmMoreGamesButton", "_mmMoreGamesButton", 394, 306),
-      new Button(r, "mmQuitButton", "_mmQuitButton", 496, 314),
+      new Button(r, "mmMoreGamesButton", 394, 306),
+      new Button(r, "mmQuitButton", 496, 314),
       this.optionsDialog,
     ]);
   }

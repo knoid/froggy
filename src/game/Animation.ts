@@ -11,14 +11,13 @@ export default class Animation extends AlphaPicture {
 
   constructor(
     resources: Resources,
-    colorImage: string | HTMLImageElement,
-    alphaImage: string | HTMLImageElement,
+    colorImage: string,
     x: number,
     y: number,
     protected framesCount: number,
     protected orientation: Orientation
   ) {
-    super(resources, colorImage, alphaImage, x, y);
+    super(resources, colorImage, x, y);
   }
 
   get height(): number {
