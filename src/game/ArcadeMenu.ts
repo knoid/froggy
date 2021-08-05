@@ -1,14 +1,19 @@
 import AlphaPicture from "./AlphaPicture";
 import Button from "./Button";
 import { WIN_WIDTH } from "./constants";
+import Door from "./Door";
 import MainMenu from "./MainMenu";
 import Picture from "./Picture";
 import Resources from "./Resources";
 import Scene from "./Scene";
+import Temple from "./Temple";
 
 export default class ArcadeMenu extends Scene {
-  private sky: Picture[];
   private mainMenuButton: Button;
+  private sky: Picture[];
+  private temples: Temple[];
+  private selectedDoor: Door;
+  private selectedTemple: Temple;
 
   constructor(resources: Resources) {
     super(resources);
@@ -21,29 +26,49 @@ export default class ArcadeMenu extends Scene {
     this.mainMenuButton = new Button(resources, "advMainMenuButton", 0, 438);
     this.mainMenuButton.addEventListener("click", this.onMainMenuButtonClick);
 
+    this.temples = [
+      new Temple(resources, "advTemple3", 395, 115, "POPO POYOLLI", [
+        new Door(resources, "advDoor3A", 452, 144, 7, true),
+        new Door(resources, "advDoor3B", 508, 144, 8),
+        new Door(resources, "advDoor3C", 567, 145, 9),
+      ]),
+
+      new Temple(resources, "advTemple2", 0, 115, "QUETZAL QUATL", [
+        new Door(resources, "advDoor2A", 0, 170, 4),
+        new Door(resources, "advDoor2B", 69, 162, 5, true),
+        new Door(resources, "advDoor2C", 120, 160, 6),
+      ]),
+
+      new Temple(resources, "advTemple1", 0, 188, "TEMPLE OF ZUKULKAN", [
+        new Door(resources, "advDoor1A", 226, 300, 1, true),
+        new Door(resources, "advDoor1B", 297, 270, 2, true),
+        new Door(resources, "advDoor1C", 366, 300, 3, true),
+      ]),
+    ];
+    this.selectedTemple = this.temples[this.temples.length - 1];
+    this.selectedDoor = this.selectedTemple.doors[0];
+    this.selectedDoor.selected = true;
+
+    this.temples.forEach((temple) => {
+      temple.addEventListener("click", this.onTempleClick);
+      temple.addEventListener("doorClick", this.onDoorClick);
+    });
+
     this.addActors([
       ...this.sky,
       new AlphaPicture(resources, "advBack", 0, 0),
-      new AlphaPicture(resources, "advTemple3", 395, 115),
-      new AlphaPicture(resources, "advTemple2", 0, 115),
-      new AlphaPicture(resources, "advTemple1", 0, 188),
+      ...this.temples,
       new Picture(resources, "advStage", 289, 381),
-
-      // new Door(resources, "advDoor1A", 226, 300, 1, 'TEMPLE OF ZUKULKAN', true),
-      // new Door(resources, "advDoor1B", 297, 270, 2, 'TEMPLE OF ZUKULKAN', true),
-      // new Door(resources, "advDoor1C", 366, 300, 3, 'TEMPLE OF ZUKULKAN', true),
-      // new Door(resources, "advDoor2A",   0, 170, 4, 'QUETZAL QUATL'),
-      // new Door(resources, "advDoor2B",  69, 162, 5, 'QUETZAL QUATL'),
-      // new Door(resources, "advDoor2C", 120, 160, 6, 'QUETZAL QUATL'),
-      // new Door(resources, "advDoor3A", 452, 144, 7, 'POPO POYOLLI'),
-      // new Door(resources, "advDoor3B", 508, 144, 8, 'POPO POYOLLI'),
-      // new Door(resources, "advDoor3C", 567, 145, 9, 'POPO POYOLLI'),
-
       new AlphaPicture(resources, "advTitle", 0, 0),
       new AlphaPicture(resources, "advHighScore", 456, 0),
       this.mainMenuButton,
       new Button(resources, "advPlayButton", 543, 441),
     ]);
+  }
+
+  draw(ctx: CanvasRenderingContext2D): void {
+    super.draw(ctx);
+    this.selectedTemple.title.draw(ctx);
   }
 
   logic(timeDiff: number): void {
@@ -61,11 +86,25 @@ export default class ArcadeMenu extends Scene {
       "click",
       this.onMainMenuButtonClick
     );
+    this.temples.forEach((temple) => {
+      temple.removeEventListener("click", this.onTempleClick);
+      temple.removeEventListener("doorClick", this.onDoorClick);
+    });
   }
 
-  private onMainMenuButtonClick = (): void => {
+  private onDoorClick = (e: CustomEvent) => {
+    this.selectedDoor.selected = false;
+    this.selectedDoor = e.detail;
+    this.selectedDoor.selected = true;
+  };
+
+  private onMainMenuButtonClick = () => {
     this.dispatchEvent(
       new CustomEvent("sceneChange", { detail: new MainMenu(this.resources) })
     );
+  };
+
+  private onTempleClick = (e: MouseEvent) => {
+    this.selectedTemple = e.relatedTarget as Temple;
   };
 }

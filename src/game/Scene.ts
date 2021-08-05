@@ -62,27 +62,31 @@ export default abstract class Scene
   private onMouseDown = (e: MouseEvent): void => {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
-      actor.dispatchEvent(this.newMouseEvent("mousedown", e));
+      actor.dispatchEvent(this.newMouseEvent("mousedown", e, actor));
     }
   };
 
   private onMouseMove = (e: MouseEvent): void => {
     if (e.buttons > 0) {
       if (this.actorHovered) {
-        this.actorHovered.dispatchEvent(this.newMouseEvent("mousemove", e));
+        this.actorHovered.dispatchEvent(
+          this.newMouseEvent("mousemove", e, this.actorHovered)
+        );
       }
     } else {
       const actor = this.findActor(e.clientX, e.clientY);
       if (actor) {
-        actor.dispatchEvent(this.newMouseEvent("mousemove", e));
+        actor.dispatchEvent(this.newMouseEvent("mousemove", e, actor));
       }
       if (actor !== this.actorHovered) {
         if (this.actorHovered) {
-          this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+          this.actorHovered.dispatchEvent(
+            this.newMouseEvent("mouseout", e, this.actorHovered)
+          );
           this.actorHovered = null;
         }
         if (actor) {
-          actor.dispatchEvent(this.newMouseEvent("mouseover", e));
+          actor.dispatchEvent(this.newMouseEvent("mouseover", e, actor));
           this.actorHovered = actor;
         }
       }
@@ -91,7 +95,9 @@ export default abstract class Scene
 
   private onMouseOut = (e: MouseEvent): void => {
     if (this.actorHovered && e.buttons === 0) {
-      this.actorHovered.dispatchEvent(this.newMouseEvent("mouseout", e));
+      this.actorHovered.dispatchEvent(
+        this.newMouseEvent("mouseout", e, this.actorHovered)
+      );
       this.actorHovered = null;
     }
   };
@@ -99,18 +105,22 @@ export default abstract class Scene
   private onMouseOver = (e: MouseEvent): void => {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
-      actor.dispatchEvent(this.newMouseEvent("mouseover", e));
+      actor.dispatchEvent(this.newMouseEvent("mouseover", e, actor));
     }
   };
 
   private onMouseUp = (e: MouseEvent): void => {
     if (this.actorHovered) {
-      this.actorHovered.dispatchEvent(this.newMouseEvent("mouseup", e));
+      this.actorHovered.dispatchEvent(
+        this.newMouseEvent("mouseup", e, this.actorHovered)
+      );
       const actor = this.findActor(e.clientX, e.clientY);
       if (this.actorHovered === actor) {
-        this.actorHovered.dispatchEvent(this.newMouseEvent("click", e));
+        this.actorHovered.dispatchEvent(
+          this.newMouseEvent("click", e, this.actorHovered)
+        );
       } else if (actor) {
-        actor.dispatchEvent(this.newMouseEvent("mouseover", e));
+        actor.dispatchEvent(this.newMouseEvent("mouseover", e, actor));
       }
     }
   };
@@ -123,11 +133,12 @@ export default abstract class Scene
       .find((actor) => actor.isPointInside(relativeX, relativeY));
   }
 
-  private newMouseEvent(type: string, e: MouseEvent) {
+  private newMouseEvent(type: string, e: MouseEvent, target: EventTarget) {
     return new MouseEvent(type, {
       buttons: e.buttons,
       clientX: e.clientX - this.x,
       clientY: e.clientY - this.y,
+      relatedTarget: target,
     });
   }
 }
