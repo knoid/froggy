@@ -1,3 +1,4 @@
+/** @jest-environment jsdom */
 import Font from "./Font";
 
 test("parse font definition file", () => {
