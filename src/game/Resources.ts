@@ -10,13 +10,28 @@ type LoaderEventMap = {
   error: Event;
 };
 
+type FontName =
+  | "Arial9Bold"
+  | "Arial12Bold"
+  | "Cancun8"
+  | "Cancun10"
+  | "Cancun12"
+  | "Cancun13"
+  | "Cancun22"
+  | "CancunFloat14"
+  | "NativeAlien48"
+  | "NativeAlienExtended16"
+  | "NativeAlienExtended18";
+
 const imagesPathRegex = /^(fonts|images|levels)\/(.+)\.(gif|jpg)$/i;
 const fontsPathRegex = /^(fonts)\/(.+)\.txt$/i;
 
 export default class Resources {
   private freeCanvases: HTMLCanvasElement[] = [];
-  private images: { [filePath: string]: HTMLImageElement } = {};
-  public fonts: { [fontName: string]: Font } = {};
+  private images: Record<string, HTMLImageElement> = {};
+
+  // @ts-expect-error it will be populated before usage
+  public fonts: Record<FontName, Font> = {};
 
   constructor(private fs: JSZip) {}
 
@@ -24,7 +39,7 @@ export default class Resources {
     return this.images[name.toLowerCase()];
   }
 
-  async loadFont(fontName: string): Promise<Font> {
+  async loadFont(fontName: FontName): Promise<Font> {
     log("font load start %s", fontName);
     const fontDefinitionFileBuffer = await this.fs
       .file(`fonts/${fontName}.txt`)
@@ -117,7 +132,7 @@ export default class Resources {
     }).then(() =>
       this.serialLoader(fonts, async (fontFile) => {
         const basename = fontFile.name.match(fontsPathRegex)[2];
-        await this.loadFont(basename);
+        await this.loadFont(basename as FontName);
         dispatchProgress();
       })
     );
