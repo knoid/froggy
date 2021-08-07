@@ -5,7 +5,11 @@ import { PointerEvents } from "./Picture";
 import Resources from "./Resources";
 import Scene from "./Scene";
 
-export default class Temple extends Scene {
+type EventMap = {
+  stageClick: CustomEvent;
+};
+
+export default class Temple extends Scene<EventMap> {
   public title: Drawable;
   public selectedStage: Stage | null = null;
 

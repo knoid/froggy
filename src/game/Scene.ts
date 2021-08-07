@@ -1,14 +1,24 @@
 import Drawable from "./Drawable";
 import Emitter from "./Emitter";
-import type Resources from "./Resources";
+import Resources from "./Resources";
 
 type EventsMap = {
   click: MouseEvent;
+  mousedown: MouseEvent;
+  mousemove: MouseEvent;
+  mouseout: MouseEvent;
+  mouseover: MouseEvent;
+  mouseup: MouseEvent;
   remove: Event;
+  sceneChange: CustomEvent;
 };
 
-export default abstract class Scene
-  extends Emitter<EventsMap>
+type MouseEventType = {
+  [K in keyof EventsMap]-?: EventsMap[K] extends MouseEvent ? K : never;
+}[keyof EventsMap];
+
+export default abstract class Scene<ExtraEventsMap = Record<string, never>>
+  extends Emitter<ExtraEventsMap & EventsMap>
   implements Drawable
 {
   protected actors: Drawable[] = [];
@@ -133,7 +143,11 @@ export default abstract class Scene
       .find((actor) => actor.isPointInside(relativeX, relativeY));
   }
 
-  private newMouseEvent(type: string, e: MouseEvent, target: EventTarget) {
+  private newMouseEvent(
+    type: MouseEventType,
+    e: MouseEvent,
+    target: EventTarget
+  ) {
     return new MouseEvent(type, {
       buttons: e.buttons,
       clientX: e.clientX - this.x,

@@ -6,8 +6,11 @@ import Resources from "./Resources";
 type Coords2D = [number, number];
 type EventsMap = {
   click: MouseEvent;
+  mousedown: MouseEvent;
+  mousemove: MouseEvent;
   mouseout: MouseEvent;
   mouseover: MouseEvent;
+  mouseup: MouseEvent;
 };
 type ImageSource = HTMLImageElement | HTMLCanvasElement;
 type RGB = [number, number, number];
