@@ -1,9 +1,11 @@
 import Animation, { Orientation } from "./Animation";
 import { MouseState } from "./Button";
+import Drawable from "./Drawable";
 import { PointerEvents } from "./Picture";
 import Resources from "./Resources";
 
-export default class Door extends Animation {
+export default class Stage extends Animation {
+  number: Drawable;
   selected = false;
 
   constructor(
@@ -21,6 +23,15 @@ export default class Door extends Animation {
       this.currentFrame = 1;
       this.addEventListener("mouseover", this.onMouseOver);
       this.addEventListener("mouseout", this.onMouseOut);
+
+      const number = resources.fonts["Cancun10"].createText(
+        "Main",
+        343,
+        385,
+        `${stage}`
+      );
+      number.fill([249, 239, 175]);
+      this.number = number;
     }
   }
 

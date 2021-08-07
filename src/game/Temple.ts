@@ -1,5 +1,5 @@
 import AlphaPicture from "./AlphaPicture";
-import Door from "./Door";
+import Stage from "./Stage";
 import Drawable from "./Drawable";
 import { PointerEvents } from "./Picture";
 import Resources from "./Resources";
@@ -7,7 +7,7 @@ import Scene from "./Scene";
 
 export default class Temple extends Scene {
   public title: Drawable;
-  public selectedDoor: Door | null = null;
+  public selectedStage: Stage | null = null;
 
   constructor(
     resources: Resources,
@@ -15,7 +15,7 @@ export default class Temple extends Scene {
     x: number,
     y: number,
     name: string,
-    public doors: Door[]
+    public stages: Stage[]
   ) {
     super(resources);
     this.title = resources.fonts["NativeAlienExtended16"].createText(
@@ -27,22 +27,24 @@ export default class Temple extends Scene {
     const temple = new AlphaPicture(resources, image, x, y);
     temple.pointerEvents = PointerEvents.None;
 
-    doors.forEach((door) => door.addEventListener("click", this.onDoorClick));
+    stages.forEach((stage) =>
+      stage.addEventListener("click", this.onStageClick)
+    );
 
-    this.addActors([temple, ...doors]);
+    this.addActors([temple, ...stages]);
   }
 
   remove(): void {
     this.title.remove();
     super.remove();
-    this.doors.forEach((door) =>
-      door.removeEventListener("click", this.onDoorClick)
+    this.stages.forEach((stage) =>
+      stage.removeEventListener("click", this.onStageClick)
     );
   }
 
-  private onDoorClick = (e: MouseEvent) => {
+  private onStageClick = (e: MouseEvent) => {
     this.dispatchEvent(
-      new CustomEvent("doorClick", { detail: e.relatedTarget })
+      new CustomEvent("stageClick", { detail: e.relatedTarget })
     );
   };
 }

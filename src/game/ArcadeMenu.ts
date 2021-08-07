@@ -1,7 +1,7 @@
 import AlphaPicture from "./AlphaPicture";
 import Button from "./Button";
 import { WIN_WIDTH } from "./constants";
-import Door from "./Door";
+import Stage from "./Stage";
 import MainMenu from "./MainMenu";
 import Picture from "./Picture";
 import Resources from "./Resources";
@@ -12,7 +12,7 @@ export default class ArcadeMenu extends Scene {
   private mainMenuButton: Button;
   private sky: Picture[];
   private temples: Temple[];
-  private selectedDoor: Door;
+  private selectedStage: Stage;
   private selectedTemple: Temple;
 
   constructor(resources: Resources) {
@@ -28,30 +28,30 @@ export default class ArcadeMenu extends Scene {
 
     this.temples = [
       new Temple(resources, "advTemple3", 395, 115, "POPO POYOLLI", [
-        new Door(resources, "advDoor3A", 452, 144, 7, true),
-        new Door(resources, "advDoor3B", 508, 144, 8),
-        new Door(resources, "advDoor3C", 567, 145, 9),
+        new Stage(resources, "advDoor3A", 452, 144, 7, true),
+        new Stage(resources, "advDoor3B", 508, 144, 8),
+        new Stage(resources, "advDoor3C", 567, 145, 9),
       ]),
 
       new Temple(resources, "advTemple2", 0, 115, "QUETZAL QUATL", [
-        new Door(resources, "advDoor2A", 0, 170, 4),
-        new Door(resources, "advDoor2B", 69, 162, 5, true),
-        new Door(resources, "advDoor2C", 120, 160, 6),
+        new Stage(resources, "advDoor2A", 0, 170, 4),
+        new Stage(resources, "advDoor2B", 69, 162, 5, true),
+        new Stage(resources, "advDoor2C", 120, 160, 6),
       ]),
 
       new Temple(resources, "advTemple1", 0, 188, "TEMPLE OF ZUKULKAN", [
-        new Door(resources, "advDoor1A", 226, 300, 1, true),
-        new Door(resources, "advDoor1B", 297, 270, 2, true),
-        new Door(resources, "advDoor1C", 366, 300, 3, true),
+        new Stage(resources, "advDoor1A", 226, 300, 1, true),
+        new Stage(resources, "advDoor1B", 297, 270, 2, true),
+        new Stage(resources, "advDoor1C", 366, 300, 3, true),
       ]),
     ];
     this.selectedTemple = this.temples[this.temples.length - 1];
-    this.selectedDoor = this.selectedTemple.doors[0];
-    this.selectedDoor.selected = true;
+    this.selectedStage = this.selectedTemple.stages[0];
+    this.selectedStage.selected = true;
 
     this.temples.forEach((temple) => {
       temple.addEventListener("click", this.onTempleClick);
-      temple.addEventListener("doorClick", this.onDoorClick);
+      temple.addEventListener("stageClick", this.onStageClick);
     });
 
     this.addActors([
@@ -69,6 +69,7 @@ export default class ArcadeMenu extends Scene {
   draw(ctx: CanvasRenderingContext2D): void {
     super.draw(ctx);
     this.selectedTemple.title.draw(ctx);
+    this.selectedStage.number.draw(ctx);
   }
 
   logic(timeDiff: number): void {
@@ -88,14 +89,14 @@ export default class ArcadeMenu extends Scene {
     );
     this.temples.forEach((temple) => {
       temple.removeEventListener("click", this.onTempleClick);
-      temple.removeEventListener("doorClick", this.onDoorClick);
+      temple.removeEventListener("stageClick", this.onStageClick);
     });
   }
 
-  private onDoorClick = (e: CustomEvent) => {
-    this.selectedDoor.selected = false;
-    this.selectedDoor = e.detail;
-    this.selectedDoor.selected = true;
+  private onStageClick = (e: CustomEvent) => {
+    this.selectedStage.selected = false;
+    this.selectedStage = e.detail;
+    this.selectedStage.selected = true;
   };
 
   private onMainMenuButtonClick = () => {
