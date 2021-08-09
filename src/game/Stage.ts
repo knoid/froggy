@@ -5,7 +5,7 @@ import { PointerEvents } from "./Picture";
 import Resources from "./Resources";
 
 export default class Stage extends Animation {
-  number: Drawable;
+  numberText: Drawable;
   selected = false;
 
   constructor(
@@ -13,7 +13,7 @@ export default class Stage extends Animation {
     colorImage: string,
     x: number,
     y: number,
-    stage: number,
+    public number: number,
     opened = false
   ) {
     super(resources, colorImage, x, y, 4, Orientation.horizontal);
@@ -24,14 +24,14 @@ export default class Stage extends Animation {
       this.addEventListener("mouseover", this.onMouseOver);
       this.addEventListener("mouseout", this.onMouseOut);
 
-      const number = resources.fonts["Cancun10"].createText(
+      const numberText = resources.fonts["Cancun10"].createText(
         "Main",
         343,
         385,
-        `${stage}`
+        `${number + 1}`
       );
-      number.fill([249, 239, 175]);
-      this.number = number;
+      numberText.fill([249, 239, 175]);
+      this.numberText = numberText;
     }
   }
 

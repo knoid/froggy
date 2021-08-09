@@ -1,7 +1,9 @@
 import JSZip from "jszip";
+import parseCurve, { Curve } from "../shared/parseCurve";
 import { logger } from "./constants";
 import Emitter from "./Emitter";
 import Font from "./Font";
+import Graphics from "./levels/Graphics";
 
 const log = logger.extend("resources");
 
@@ -27,16 +29,49 @@ const imagesPathRegex = /^(fonts|images|levels)\/(.+)\.(gif|jpg)$/i;
 const fontsPathRegex = /^(fonts)\/(.+)\.txt$/i;
 
 export default class Resources {
+  // @ts-expect-error it will be populated before usage
+  fonts: Record<FontName, Font> = {};
   private freeCanvases: HTMLCanvasElement[] = [];
   private images: Record<string, HTMLImageElement> = {};
-
-  // @ts-expect-error it will be populated before usage
-  public fonts: Record<FontName, Font> = {};
+  levels: {
+    difficulty: string[][];
+    graphics: Record<string, Graphics>;
+    stages: string[][];
+  };
 
   constructor(private fs: JSZip) {}
 
   image(name: string): HTMLImageElement {
     return this.images[name.toLowerCase()];
+  }
+
+  freeCanvas(context2d: CanvasRenderingContext2D): void {
+    context2d.canvas.width = 1;
+    context2d.canvas.height = 1;
+    context2d.globalCompositeOperation = "source-over";
+    this.freeCanvases.push(context2d.canvas);
+  }
+
+  getCanvas(width?: number, height?: number): CanvasRenderingContext2D {
+    let canvas: HTMLCanvasElement;
+    if (this.freeCanvases.length > 0) {
+      canvas = this.freeCanvases.pop();
+    } else {
+      canvas = document.createElement("canvas");
+      log("new canvas");
+    }
+
+    const ctx = canvas.getContext("2d");
+    canvas.width = width;
+    canvas.height = height;
+    return ctx;
+  }
+
+  async loadCurve(curveName: string): Promise<Curve> {
+    const datContents = await this.fs
+      .file(`level/${curveName}/${curveName}.dat`)
+      .async("arraybuffer");
+    return parseCurve(datContents);
   }
 
   async loadFont(fontName: FontName): Promise<Font> {
@@ -62,28 +97,6 @@ export default class Resources {
     this.fonts[fontName] = font;
     log("saved font as %s", fontName);
     return font;
-  }
-
-  freeCanvas(context2d: CanvasRenderingContext2D): void {
-    context2d.canvas.width = 1;
-    context2d.canvas.height = 1;
-    context2d.globalCompositeOperation = "source-over";
-    this.freeCanvases.push(context2d.canvas);
-  }
-
-  getCanvas(width?: number, height?: number): CanvasRenderingContext2D {
-    let canvas: HTMLCanvasElement;
-    if (this.freeCanvases.length > 0) {
-      canvas = this.freeCanvases.pop();
-    } else {
-      canvas = document.createElement("canvas");
-      log("new canvas");
-    }
-
-    const ctx = canvas.getContext("2d");
-    canvas.width = width;
-    canvas.height = height;
-    return ctx;
   }
 
   async loadImage(filePath: string): Promise<HTMLImageElement> {
@@ -112,11 +125,34 @@ export default class Resources {
     });
   }
 
+  async loadLevels(): Promise<void> {
+    const levelsData = await this.fs.file("levels/levels.xml").async("text");
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(levelsData, "text/html");
+
+    const stageProgression = xml.getElementsByTagName("StageProgression")[0];
+    const stages: string[][] = [];
+    const difficulty: string[][] = [];
+    for (let i = 0, n = stageProgression.attributes.length; i < n; i++) {
+      const attribute = stageProgression.attributes.item(i);
+      const [, type, stage] = attribute.name.match(/(diffi|stage)(\d+)/);
+      const array = type === "diffi" ? difficulty : stages;
+      array.splice(Number(stage) - 1, 0, attribute.value.split(","));
+    }
+
+    const graphicsElements = xml.getElementsByTagName("graphics");
+    const graphics: Record<string, Graphics> = {};
+    for (const graphicsElement of Array.from(graphicsElements)) {
+      graphics[graphicsElement.id] = new Graphics(graphicsElement);
+    }
+    this.levels = { graphics, stages, difficulty };
+  }
+
   loadAll(): Emitter<LoaderEventMap> {
     const emitter = new Emitter<LoaderEventMap>();
     const images = this.fs.file(imagesPathRegex);
     const fonts = this.fs.file(fontsPathRegex);
-    const total = images.length + fonts.length;
+    const total = images.length + fonts.length + 1;
     let loaded = 0;
 
     function dispatchProgress() {
@@ -126,16 +162,24 @@ export default class Resources {
       emitter.dispatchEvent(event);
     }
 
-    this.serialLoader(images, async (image) => {
-      await this.loadImage(image.name);
-      dispatchProgress();
-    }).then(() =>
-      this.serialLoader(fonts, async (fontFile) => {
-        const basename = fontFile.name.match(fontsPathRegex)[2];
-        await this.loadFont(basename as FontName);
+    Promise.resolve()
+      .then(() =>
+        this.serialLoader(images, async (image) => {
+          await this.loadImage(image.name);
+          dispatchProgress();
+        })
+      )
+      .then(() =>
+        this.serialLoader(fonts, async (fontFile) => {
+          const basename = fontFile.name.match(fontsPathRegex)[2];
+          await this.loadFont(basename as FontName);
+          dispatchProgress();
+        })
+      )
+      .then(() => {
+        this.loadLevels();
         dispatchProgress();
-      })
-    );
+      });
 
     return emitter;
   }

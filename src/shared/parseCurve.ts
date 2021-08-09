@@ -1,16 +1,13 @@
 type Coords2D = [number, number];
-type Curve = Coords2D[];
+export type Curve = Coords2D[];
 
-export function curveParser(fileContents: ArrayBuffer): Curve {
+export default function parseCurve(fileContents: ArrayBuffer): Curve {
   const data = new DataView(fileContents);
 
   const header = String.fromCharCode(
     ...Array.from(new Uint8Array(fileContents, 0, 4))
   );
-
-  if (header !== "CURV") {
-    throw new Error("invalid curve file");
-  }
+  console.assert(header === "CURV", "invalid header %s", header);
 
   const byteSize = data.getUint32(3 * 4, true);
   // const pointsCount = data.getUint32(4 * 4, true);

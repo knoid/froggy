@@ -7,9 +7,11 @@ import Picture from "./Picture";
 import Resources from "./Resources";
 import Scene from "./Scene";
 import Temple from "./Temple";
+import Level from "./Level";
 
 export default class ArcadeMenu extends Scene {
   private mainMenuButton: Button;
+  private playButton: Button;
   private sky: Picture[];
   private temples: Temple[];
   private selectedStage: Stage;
@@ -28,21 +30,21 @@ export default class ArcadeMenu extends Scene {
 
     this.temples = [
       new Temple(resources, "advTemple3", 395, 115, "POPO POYOLLI", [
-        new Stage(resources, "advDoor3A", 452, 144, 7, true),
-        new Stage(resources, "advDoor3B", 508, 144, 8),
-        new Stage(resources, "advDoor3C", 567, 145, 9),
+        new Stage(resources, "advDoor3A", 452, 144, 6, true),
+        new Stage(resources, "advDoor3B", 508, 144, 7),
+        new Stage(resources, "advDoor3C", 567, 145, 8),
       ]),
 
       new Temple(resources, "advTemple2", 0, 115, "QUETZAL QUATL", [
-        new Stage(resources, "advDoor2A", 0, 170, 4),
-        new Stage(resources, "advDoor2B", 69, 162, 5, true),
-        new Stage(resources, "advDoor2C", 120, 160, 6),
+        new Stage(resources, "advDoor2A", 0, 170, 3),
+        new Stage(resources, "advDoor2B", 69, 162, 4, true),
+        new Stage(resources, "advDoor2C", 120, 160, 5),
       ]),
 
       new Temple(resources, "advTemple1", 0, 188, "TEMPLE OF ZUKULKAN", [
-        new Stage(resources, "advDoor1A", 226, 300, 1, true),
-        new Stage(resources, "advDoor1B", 297, 270, 2, true),
-        new Stage(resources, "advDoor1C", 366, 300, 3, true),
+        new Stage(resources, "advDoor1A", 226, 300, 0, true),
+        new Stage(resources, "advDoor1B", 297, 270, 1, true),
+        new Stage(resources, "advDoor1C", 366, 300, 2, true),
       ]),
     ];
     this.selectedTemple = this.temples[this.temples.length - 1];
@@ -54,6 +56,9 @@ export default class ArcadeMenu extends Scene {
       temple.addEventListener("stageClick", this.onStageClick);
     });
 
+    this.playButton = new Button(resources, "advPlayButton", 543, 441);
+    this.playButton.addEventListener("click", this.onPlayButtonClick);
+
     this.addActors([
       ...this.sky,
       new AlphaPicture(resources, "advBack", 0, 0),
@@ -62,14 +67,14 @@ export default class ArcadeMenu extends Scene {
       new AlphaPicture(resources, "advTitle", 0, 0),
       new AlphaPicture(resources, "advHighScore", 456, 0),
       this.mainMenuButton,
-      new Button(resources, "advPlayButton", 543, 441),
+      this.playButton,
     ]);
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
     super.draw(ctx);
     this.selectedTemple.title.draw(ctx);
-    this.selectedStage.number.draw(ctx);
+    this.selectedStage.numberText.draw(ctx);
   }
 
   logic(timeDiff: number): void {
@@ -91,6 +96,7 @@ export default class ArcadeMenu extends Scene {
       temple.removeEventListener("click", this.onTempleClick);
       temple.removeEventListener("stageClick", this.onStageClick);
     });
+    this.playButton.removeEventListener("click", this.onPlayButtonClick);
   }
 
   private onStageClick = (e: CustomEvent) => {
@@ -102,6 +108,14 @@ export default class ArcadeMenu extends Scene {
   private onMainMenuButtonClick = () => {
     this.dispatchEvent(
       new CustomEvent("sceneChange", { detail: new MainMenu(this.resources) })
+    );
+  };
+
+  private onPlayButtonClick = () => {
+    this.dispatchEvent(
+      new CustomEvent("sceneChange", {
+        detail: new Level(this.resources, this.selectedStage.number),
+      })
     );
   };
 
