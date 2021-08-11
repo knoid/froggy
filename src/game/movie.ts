@@ -41,6 +41,7 @@ export default async function movie(
     });
   }
 
+  attachEventListener("dblclick");
   attachEventListener("mousedown");
   attachEventListener("mousemove");
   attachEventListener("mouseout");

@@ -53,7 +53,10 @@ export default class ArcadeMenu extends Scene {
 
     this.temples.forEach((temple) => {
       temple.addEventListener("click", this.onTempleClick);
-      temple.addEventListener("stageClick", this.onStageClick);
+      temple.stages.forEach((stage) => {
+        stage.addEventListener("click", this.onStageClick);
+        stage.addEventListener("dblclick", this.onStageDoubleClick);
+      });
     });
 
     this.playButton = new Button(resources, "advPlayButton", 543, 441);
@@ -94,15 +97,23 @@ export default class ArcadeMenu extends Scene {
     );
     this.temples.forEach((temple) => {
       temple.removeEventListener("click", this.onTempleClick);
-      temple.removeEventListener("stageClick", this.onStageClick);
+      temple.stages.forEach((stage) => {
+        stage.removeEventListener("click", this.onStageClick);
+        stage.removeEventListener("dblclick", this.onStageDoubleClick);
+      });
     });
     this.playButton.removeEventListener("click", this.onPlayButtonClick);
   }
 
-  private onStageClick = (e: CustomEvent) => {
+  private onStageClick = (e: MouseEvent) => {
     this.selectedStage.selected = false;
-    this.selectedStage = e.detail;
+    this.selectedStage = e.relatedTarget as Stage;
     this.selectedStage.selected = true;
+  };
+
+  private onStageDoubleClick = (e: MouseEvent) => {
+    this.onStageClick(e);
+    this.onPlayButtonClick();
   };
 
   private onMainMenuButtonClick = () => {

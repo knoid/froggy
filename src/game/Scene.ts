@@ -4,6 +4,7 @@ import Resources from "./Resources";
 
 type EventsMap = {
   click: MouseEvent;
+  dblclick: MouseEvent;
   mousedown: MouseEvent;
   mousemove: MouseEvent;
   mouseout: MouseEvent;
@@ -26,6 +27,7 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
 
   constructor(protected resources: Resources, public x = 0, public y = 0) {
     super();
+    this.addEventListener("dblclick", this.onDoubleClick);
     this.addEventListener("mousedown", this.onMouseDown);
     this.addEventListener("mousemove", this.onMouseMove);
     this.addEventListener("mouseout", this.onMouseOut);
@@ -69,14 +71,21 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     this.removeEventListener("mouseup", this.onMouseUp);
   }
 
-  private onMouseDown = (e: MouseEvent): void => {
+  private onDoubleClick = (e: MouseEvent) => {
+    const actor = this.findActor(e.clientX, e.clientY);
+    if (actor) {
+      actor.dispatchEvent(this.newMouseEvent("dblclick", e, actor));
+    }
+  };
+
+  private onMouseDown = (e: MouseEvent) => {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
       actor.dispatchEvent(this.newMouseEvent("mousedown", e, actor));
     }
   };
 
-  private onMouseMove = (e: MouseEvent): void => {
+  private onMouseMove = (e: MouseEvent) => {
     if (e.buttons > 0) {
       if (this.actorHovered) {
         this.actorHovered.dispatchEvent(
@@ -103,7 +112,7 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     }
   };
 
-  private onMouseOut = (e: MouseEvent): void => {
+  private onMouseOut = (e: MouseEvent) => {
     if (this.actorHovered && e.buttons === 0) {
       this.actorHovered.dispatchEvent(
         this.newMouseEvent("mouseout", e, this.actorHovered)
@@ -112,14 +121,14 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     }
   };
 
-  private onMouseOver = (e: MouseEvent): void => {
+  private onMouseOver = (e: MouseEvent) => {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
       actor.dispatchEvent(this.newMouseEvent("mouseover", e, actor));
     }
   };
 
-  private onMouseUp = (e: MouseEvent): void => {
+  private onMouseUp = (e: MouseEvent) => {
     if (this.actorHovered) {
       this.actorHovered.dispatchEvent(
         this.newMouseEvent("mouseup", e, this.actorHovered)

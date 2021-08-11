@@ -5,11 +5,7 @@ import { PointerEvents } from "./Picture";
 import Resources from "./Resources";
 import Scene from "./Scene";
 
-type EventMap = {
-  stageClick: CustomEvent;
-};
-
-export default class Temple extends Scene<EventMap> {
+export default class Temple extends Scene {
   public title: Drawable;
   public selectedStage: Stage | null = null;
 
@@ -31,24 +27,11 @@ export default class Temple extends Scene<EventMap> {
     const temple = new AlphaPicture(resources, image, x, y);
     temple.pointerEvents = PointerEvents.None;
 
-    stages.forEach((stage) =>
-      stage.addEventListener("click", this.onStageClick)
-    );
-
     this.addActors([temple, ...stages]);
   }
 
   remove(): void {
     this.title.remove();
     super.remove();
-    this.stages.forEach((stage) =>
-      stage.removeEventListener("click", this.onStageClick)
-    );
   }
-
-  private onStageClick = (e: MouseEvent) => {
-    this.dispatchEvent(
-      new CustomEvent("stageClick", { detail: e.relatedTarget })
-    );
-  };
 }

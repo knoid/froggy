@@ -6,6 +6,7 @@ import Resources from "./Resources";
 type Coords2D = [number, number];
 type EventsMap = {
   click: MouseEvent;
+  dblclick: MouseEvent;
   mousedown: MouseEvent;
   mousemove: MouseEvent;
   mouseout: MouseEvent;
