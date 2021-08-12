@@ -1,3 +1,9 @@
+/**
+ * This code is based on hclxing's python implementation on "Reverse
+ * Engineering Zuma Deluxe’s level file" [blog post][1].
+ * [1]: https://hclxing.wordpress.com/2017/06/27/reverse-engineering-zuma-deluxes-level-file/
+ */
+
 type Coords2D = [number, number];
 export type Curve = Coords2D[];
 
