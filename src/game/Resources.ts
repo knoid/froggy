@@ -27,8 +27,10 @@ type FontName =
 
 const imagesPathRegex = /^(fonts|images|levels)\/(.+)\.(gif|jpg)$/i;
 const fontsPathRegex = /^(fonts)\/(.+)\.txt$/i;
+const curvePathRegex = /^(levels)\/(.+)\.dat$/i;
 
 export default class Resources {
+  curves: Record<string, Curve> = {};
   // @ts-expect-error it will be populated before usage
   fonts: Record<FontName, Font> = {};
   private freeCanvases: HTMLCanvasElement[] = [];
@@ -40,6 +42,10 @@ export default class Resources {
   };
 
   constructor(private fs: JSZip) {}
+
+  curve(name: string): Curve {
+    return this.curves[name.toLowerCase()];
+  }
 
   image(name: string): HTMLImageElement {
     return this.images[name.toLowerCase()];
@@ -152,7 +158,8 @@ export default class Resources {
     const emitter = new Emitter<LoaderEventMap>();
     const images = this.fs.file(imagesPathRegex);
     const fonts = this.fs.file(fontsPathRegex);
-    const total = images.length + fonts.length + 1;
+    const curves = this.fs.file(curvePathRegex);
+    const total = images.length + fonts.length + curves.length + 1;
     let loaded = 0;
 
     function dispatchProgress() {
@@ -176,10 +183,19 @@ export default class Resources {
           dispatchProgress();
         })
       )
+      .then(() =>
+        this.serialLoader(curves, async (curveFile) => {
+          const curveId = curveFile.name.match(curvePathRegex)[2];
+          const fileContents = await curveFile.async("arraybuffer");
+          this.curves[curveId.toLowerCase()] = parseCurve(fileContents);
+          dispatchProgress();
+        })
+      )
       .then(() => {
         this.loadLevels();
         dispatchProgress();
-      });
+      })
+      .catch((err) => emitter.dispatchEvent(err));
 
     return emitter;
   }

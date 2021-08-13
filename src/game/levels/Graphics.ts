@@ -4,7 +4,8 @@ import translate from "./translate";
 import TreasurePoint from "./TreasurePoint";
 
 export default class Graphics {
-  curveName: string;
+  curve: string;
+  curve2: string;
   image: string;
   displayName: string;
   gx: number;
@@ -15,7 +16,8 @@ export default class Graphics {
   treasurePoints: TreasurePoint[];
 
   constructor(element: Element) {
-    this.curveName = element.getAttribute("curve");
+    this.curve = element.getAttribute("curve");
+    this.curve2 = element.getAttribute("curve2");
     this.image = element.getAttribute("image");
     this.displayName = element.getAttribute("dispname");
     this.gx = Number(element.getAttribute("gx"));
