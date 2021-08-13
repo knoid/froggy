@@ -1,4 +1,4 @@
-import Animation, { Orientation } from "./Animation";
+import { AlphaAnimation, Orientation } from "./Animation";
 import Resources from "./Resources";
 
 export enum MouseState {
@@ -8,7 +8,7 @@ export enum MouseState {
   Focus,
 }
 
-export default class Button extends Animation {
+export default class Button extends AlphaAnimation {
   constructor(resources: Resources, colorImage: string, x: number, y: number) {
     super(resources, colorImage, x, y, 3, Orientation.horizontal);
     this.addEventListener("mousedown", this.onMouseDown);
@@ -18,19 +18,19 @@ export default class Button extends Animation {
   }
 
   onMouseDown = (): void => {
-    this.currentFrame = MouseState.Down;
+    this._currentFrame = MouseState.Down;
   };
 
   onMouseOut = (): void => {
-    this.currentFrame = MouseState.Out;
+    this._currentFrame = MouseState.Out;
   };
 
   onMouseOver = (): void => {
-    this.currentFrame = MouseState.Over;
+    this._currentFrame = MouseState.Over;
   };
 
   onMouseUp = ({ clientX, clientY }: MouseEvent): void => {
-    this.currentFrame = this.isPointInside(clientX, clientY)
+    this._currentFrame = this.isPointInside(clientX, clientY)
       ? MouseState.Over
       : MouseState.Out;
   };

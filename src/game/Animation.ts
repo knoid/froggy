@@ -1,4 +1,11 @@
+/**
+ * This file is using [Constrained Mixins][1] to build two different type of
+ * Animation classes.
+ * [1]: https://www.typescriptlang.org/docs/handbook/mixins.html
+ */
+
 import AlphaPicture from "./AlphaPicture";
+import Picture from "./Picture";
 import Resources from "./Resources";
 
 export enum Orientation {
@@ -6,53 +13,66 @@ export enum Orientation {
   vertical,
 }
 
-export default class Animation extends AlphaPicture {
-  protected currentFrame = 0;
+type GConstructor<T> = new (...args: unknown[]) => T;
+type BasePicture = GConstructor<Picture>;
 
-  constructor(
-    resources: Resources,
-    colorImage: string,
-    x: number,
-    y: number,
-    protected framesCount: number,
-    protected orientation: Orientation
-  ) {
-    super(resources, colorImage, x, y);
-  }
-
-  get height(): number {
-    return this.orientation === Orientation.vertical
-      ? super.height / this.framesCount
-      : super.height;
-  }
-
-  get width(): number {
-    return this.orientation === Orientation.horizontal
-      ? super.width / this.framesCount
-      : super.width;
-  }
-
-  draw(
-    ctx: CanvasRenderingContext2D,
-    sx = 0,
-    sy = 0,
-    width = this.width,
-    height = this.height,
-    x = this.x,
-    y = this.y
-  ): void {
-    let frameX = 0;
-    let frameY = 0;
-    const factor = Math.floor(this.currentFrame) / this.framesCount;
-    if (this.orientation === Orientation.vertical) {
-      frameY = super.height * factor;
-    } else {
-      frameX = super.width * factor;
-    }
-    super.draw(ctx, frameX + sx, frameY + sy, width, height, x, y);
-  }
-
-  nextFrame(): void {
-    this.currentFrame = ++this.currentFrame % this.framesCount;
-  }
+export interface Animation extends Picture {
+  _currentFrame: number;
+  nextFrame(): void;
 }
+
+function withAnimation(BasePicture: BasePicture): GConstructor<Animation> {
+  return class extends BasePicture {
+    _currentFrame = 0;
+
+    constructor(
+      resources: Resources,
+      colorImage: string,
+      x: number,
+      y: number,
+      protected framesCount: number,
+      protected orientation: Orientation
+    ) {
+      super(resources, colorImage, x, y);
+    }
+
+    get height(): number {
+      return this.orientation === Orientation.vertical
+        ? super.height / this.framesCount
+        : super.height;
+    }
+
+    get width(): number {
+      return this.orientation === Orientation.horizontal
+        ? super.width / this.framesCount
+        : super.width;
+    }
+
+    draw(
+      ctx: CanvasRenderingContext2D,
+      sx = 0,
+      sy = 0,
+      width = this.width,
+      height = this.height,
+      x = this.x,
+      y = this.y
+    ): void {
+      let frameX = 0;
+      let frameY = 0;
+      const factor = Math.floor(this._currentFrame) / this.framesCount;
+      if (this.orientation === Orientation.vertical) {
+        frameY = super.height * factor;
+      } else {
+        frameX = super.width * factor;
+      }
+      super.draw(ctx, frameX + sx, frameY + sy, width, height, x, y);
+    }
+
+    nextFrame(): void {
+      this._currentFrame = ++this._currentFrame % this.framesCount;
+    }
+  };
+}
+
+export const AlphaAnimation = withAnimation(AlphaPicture);
+export const Animation = withAnimation(Picture);

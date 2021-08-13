@@ -35,7 +35,7 @@ export default class DialogButton extends Button {
       super.draw(ctx, 40, 0, 40, 48, i, 0);
     }
 
-    if (this.currentFrame === MouseState.Down) {
+    if (this._currentFrame === MouseState.Down) {
       ctx.translate(-1, 1);
     }
     this.text.draw(ctx);
