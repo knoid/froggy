@@ -17,8 +17,8 @@ export default class ArcadeMenu extends Scene {
   private selectedStage: Stage;
   private selectedTemple: Temple;
 
-  constructor(resources: Resources) {
-    super(resources);
+  constructor(private resources: Resources) {
+    super();
 
     this.sky = [
       new Picture(resources, "advSky", -640, 0),

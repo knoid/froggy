@@ -2,6 +2,7 @@ import AlphaPicture from "./AlphaPicture";
 import { logger } from "./constants";
 import MainMenu from "./MainMenu";
 import Picture from "./Picture";
+import Resources from "./Resources";
 import Scene from "./Scene";
 
 const log = logger.extend("loadingscreen");
@@ -10,6 +11,10 @@ export default class LoadingScreen extends Scene {
   private progress = 0;
   private loadingBar: Picture;
   private playNow: Picture;
+
+  constructor(private resources: Resources) {
+    super();
+  }
 
   private onProgress = (e: ProgressEvent) => {
     this.progress = e.loaded / e.total;

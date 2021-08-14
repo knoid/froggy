@@ -17,7 +17,7 @@ export default class Temple extends Scene {
     name: string,
     public stages: Stage[]
   ) {
-    super(resources);
+    super();
     this.title = resources.fonts["NativeAlienExtended16"].createText(
       "Main",
       "center",

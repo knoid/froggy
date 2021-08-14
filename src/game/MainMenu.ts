@@ -15,9 +15,9 @@ export default class MainMenu extends Scene {
   private sky: Picture[];
   private sunGlow: Picture;
 
-  constructor(resources: Resources) {
-    super(resources);
-    const r = this.resources;
+  constructor(private resources: Resources) {
+    super();
+    const r = resources;
     this.sky = [-1, 0, 1].map((pos) => new Picture(r, "mmSky", 520 * pos, 0));
     this.sunGlow = new Picture(r, "_mmSunGlow", -70, -70);
     this.sunGlow.fill([255, 255, 0]);

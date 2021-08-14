@@ -1,6 +1,5 @@
 import Drawable from "./Drawable";
 import Emitter from "./Emitter";
-import Resources from "./Resources";
 
 type EventsMap = {
   click: MouseEvent;
@@ -25,7 +24,7 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
   protected actors: Drawable[] = [];
   protected actorHovered: Drawable | null = null;
 
-  constructor(protected resources: Resources, public x = 0, public y = 0) {
+  constructor(public x = 0, public y = 0) {
     super();
     this.addEventListener("dblclick", this.onDoubleClick);
     this.addEventListener("mousedown", this.onMouseDown);

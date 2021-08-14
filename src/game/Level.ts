@@ -8,8 +8,8 @@ import Scene from "./Scene";
 export default class Level extends Scene {
   private menuButton: Button;
 
-  constructor(resources: Resources, stage: number) {
-    super(resources);
+  constructor(protected resources: Resources, stage: number) {
+    super();
 
     const scenarioId = resources.levels.stages[stage][0];
     const graphics = resources.levels.graphics[scenarioId];

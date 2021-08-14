@@ -17,7 +17,7 @@ export default abstract class Dialog extends Scene implements Drawable {
     private height: number,
     title: string
   ) {
-    super(resources, 0, 0);
+    super();
     this.setSize();
 
     const titleFont = resources.fonts["NativeAlienExtended18"].createText(
