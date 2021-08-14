@@ -71,21 +71,21 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     this.removeEventListener("mouseup", this.onMouseUp);
   }
 
-  private onDoubleClick = (e: MouseEvent) => {
+  private onDoubleClick(e: MouseEvent) {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
       actor.dispatchEvent(this.newMouseEvent("dblclick", e, actor));
     }
-  };
+  }
 
-  private onMouseDown = (e: MouseEvent) => {
+  private onMouseDown(e: MouseEvent) {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
       actor.dispatchEvent(this.newMouseEvent("mousedown", e, actor));
     }
-  };
+  }
 
-  private onMouseMove = (e: MouseEvent) => {
+  private onMouseMove(e: MouseEvent): void {
     if (e.buttons > 0) {
       if (this.actorHovered) {
         this.actorHovered.dispatchEvent(
@@ -110,25 +110,25 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
         }
       }
     }
-  };
+  }
 
-  private onMouseOut = (e: MouseEvent) => {
+  private onMouseOut(e: MouseEvent) {
     if (this.actorHovered && e.buttons === 0) {
       this.actorHovered.dispatchEvent(
         this.newMouseEvent("mouseout", e, this.actorHovered)
       );
       this.actorHovered = null;
     }
-  };
+  }
 
-  private onMouseOver = (e: MouseEvent) => {
+  private onMouseOver(e: MouseEvent) {
     const actor = this.findActor(e.clientX, e.clientY);
     if (actor) {
       actor.dispatchEvent(this.newMouseEvent("mouseover", e, actor));
     }
-  };
+  }
 
-  private onMouseUp = (e: MouseEvent) => {
+  private onMouseUp(e: MouseEvent) {
     if (this.actorHovered) {
       this.actorHovered.dispatchEvent(
         this.newMouseEvent("mouseup", e, this.actorHovered)
@@ -142,7 +142,7 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
         actor.dispatchEvent(this.newMouseEvent("mouseover", e, actor));
       }
     }
-  };
+  }
 
   protected findActor(x: number, y: number): Drawable | undefined {
     const relativeX = x - this.x;
