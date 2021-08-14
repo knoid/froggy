@@ -19,8 +19,11 @@ export default class MainMenu extends Scene {
     super();
     const r = resources;
     this.sky = [-1, 0, 1].map((pos) => new Picture(r, "mmSky", 520 * pos, 0));
-    this.sunGlow = new Picture(r, "_mmSunGlow", -70, -70);
+
+    const mmSunGlow = r.image("_mmSunGlow");
+    this.sunGlow = new Picture(r, mmSunGlow, -70, -70);
     this.sunGlow.fill([255, 255, 0]);
+    this.sunGlow.pivot = [mmSunGlow.width / 2, mmSunGlow.height / 2];
 
     const changeUser = r.fonts["Cancun10"].createText(
       "Main",
@@ -67,7 +70,7 @@ export default class MainMenu extends Scene {
       }
     }
 
-    this.sunGlow.addRotation(timeDiff * 0.0008);
+    this.sunGlow.rotation += timeDiff * 0.0008;
   }
 
   remove(): void {

@@ -2,6 +2,7 @@ import { logger } from "./constants";
 import Drawable from "./Drawable";
 import Emitter from "./Emitter";
 import Resources from "./Resources";
+import Rotatable from "./Rotatable";
 
 type Coords2D = [number, number];
 type EventsMap = {
@@ -23,9 +24,7 @@ export enum PointerEvents {
 
 const log = logger.extend("picture");
 
-export default class Picture extends Emitter<EventsMap> implements Drawable {
-  center: Coords2D;
-  rotation = 0;
+class BasePicture extends Emitter<EventsMap> implements Drawable {
   show = true;
   pointerEvents = PointerEvents.All;
   protected context2d: CanvasRenderingContext2D | null = null;
@@ -39,7 +38,6 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
   ) {
     super();
     this.image = typeof image === "string" ? resources.image(image) : image;
-    this.center = [this.width / 2, this.height / 2];
   }
 
   get width(): number {
@@ -64,16 +62,6 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
   setPos(pos: Coords2D): this {
     this.x = pos[0];
     this.y = pos[1];
-    return this;
-  }
-
-  setRotation(rotation: number): this {
-    this.rotation = rotation;
-    return this;
-  }
-
-  addRotation(diff: number): this {
-    this.rotation = (this.rotation + diff) % (2 * Math.PI);
     return this;
   }
 
@@ -111,22 +99,10 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
     y: number = this.y
   ): void {
     if (this.show) {
-      if (this.rotation) {
-        ctx.save();
-        const dim = [x + this.center[0], y + this.center[1]];
-        ctx.translate(dim[0], dim[1]);
-        ctx.rotate(this.rotation);
-        ctx.translate(-dim[0], -dim[1]);
-      }
-
       if (typeof sx === "number") {
         ctx.drawImage(this.image, sx, sy, width, height, x, y, width, height);
       } else {
         ctx.drawImage(this.image, x, y);
-      }
-
-      if (this.rotation) {
-        ctx.restore();
       }
     }
   }
@@ -137,3 +113,5 @@ export default class Picture extends Emitter<EventsMap> implements Drawable {
     }
   }
 }
+
+export default class Picture extends Rotatable(BasePicture) {}

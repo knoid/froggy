@@ -1,5 +1,6 @@
 import Drawable from "./Drawable";
 import Emitter from "./Emitter";
+import Rotatable from "./Rotatable";
 
 type EventsMap = {
   click: MouseEvent;
@@ -17,7 +18,7 @@ type MouseEventType = {
   [K in keyof EventsMap]-?: EventsMap[K] extends MouseEvent ? K : never;
 }[keyof EventsMap];
 
-export default abstract class Scene<ExtraEventsMap = Record<string, never>>
+class BaseScene<ExtraEventsMap = Record<string, never>>
   extends Emitter<ExtraEventsMap & EventsMap>
   implements Drawable
 {
@@ -38,9 +39,9 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     this.actors.splice(this.actors.length - 1 - priority, 0, ...actors);
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D, x = this.x, y = this.y): void {
     ctx.save();
-    ctx.translate(this.x, this.y);
+    ctx.translate(x, y);
 
     for (const actor of this.actors) {
       actor.draw(ctx);
@@ -84,7 +85,7 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     }
   }
 
-  private onMouseMove(e: MouseEvent): void {
+  protected onMouseMove(e: MouseEvent): void {
     if (e.buttons > 0) {
       if (this.actorHovered) {
         this.actorHovered.dispatchEvent(
@@ -164,3 +165,5 @@ export default abstract class Scene<ExtraEventsMap = Record<string, never>>
     });
   }
 }
+
+export default class Scene extends Rotatable(BaseScene) {}
