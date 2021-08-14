@@ -16,14 +16,9 @@ export enum Orientation {
 type GConstructor<T> = new (...args: unknown[]) => T;
 type BasePicture = GConstructor<Picture>;
 
-export interface Animation extends Picture {
-  _currentFrame: number;
-  nextFrame(): void;
-}
-
-function withAnimation(BasePicture: BasePicture): GConstructor<Animation> {
+function Animatable(BasePicture: BasePicture) {
   return class extends BasePicture {
-    _currentFrame = 0;
+    protected currentFrame = 0;
 
     constructor(
       resources: Resources,
@@ -59,7 +54,7 @@ function withAnimation(BasePicture: BasePicture): GConstructor<Animation> {
     ): void {
       let frameX = 0;
       let frameY = 0;
-      const factor = Math.floor(this._currentFrame) / this.framesCount;
+      const factor = Math.floor(this.currentFrame) / this.framesCount;
       if (this.orientation === Orientation.vertical) {
         frameY = super.height * factor;
       } else {
@@ -69,10 +64,10 @@ function withAnimation(BasePicture: BasePicture): GConstructor<Animation> {
     }
 
     nextFrame(): void {
-      this._currentFrame = ++this._currentFrame % this.framesCount;
+      this.currentFrame = ++this.currentFrame % this.framesCount;
     }
   };
 }
 
-export const AlphaAnimation = withAnimation(AlphaPicture);
-export const Animation = withAnimation(Picture);
+export class AlphaAnimation extends Animatable(AlphaPicture) {}
+export class Animation extends Animatable(Picture) {}

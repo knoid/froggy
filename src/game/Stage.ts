@@ -20,7 +20,7 @@ export default class Stage extends AlphaAnimation {
     this.pointerEvents = opened ? PointerEvents.All : PointerEvents.None;
 
     if (opened) {
-      this._currentFrame = 1;
+      this.currentFrame = 1;
       this.addEventListener("mouseover", this.onMouseOver);
       this.addEventListener("mouseout", this.onMouseOut);
 
@@ -36,10 +36,10 @@ export default class Stage extends AlphaAnimation {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    const currentFrame = this._currentFrame;
-    this._currentFrame = this.selected ? MouseState.Focus : currentFrame;
+    const currentFrame = this.currentFrame;
+    this.currentFrame = this.selected ? MouseState.Focus : currentFrame;
     super.draw(ctx);
-    this._currentFrame = currentFrame;
+    this.currentFrame = currentFrame;
   }
 
   remove(): void {
@@ -49,10 +49,10 @@ export default class Stage extends AlphaAnimation {
   }
 
   private onMouseOver = () => {
-    this._currentFrame = MouseState.Over + 1;
+    this.currentFrame = MouseState.Over + 1;
   };
 
   private onMouseOut = () => {
-    this._currentFrame = MouseState.Out + 1;
+    this.currentFrame = MouseState.Out + 1;
   };
 }

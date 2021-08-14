@@ -18,19 +18,19 @@ export default class Button extends AlphaAnimation {
   }
 
   onMouseDown = (): void => {
-    this._currentFrame = MouseState.Down;
+    this.currentFrame = MouseState.Down;
   };
 
   onMouseOut = (): void => {
-    this._currentFrame = MouseState.Out;
+    this.currentFrame = MouseState.Out;
   };
 
   onMouseOver = (): void => {
-    this._currentFrame = MouseState.Over;
+    this.currentFrame = MouseState.Over;
   };
 
   onMouseUp = ({ clientX, clientY }: MouseEvent): void => {
-    this._currentFrame = this.isPointInside(clientX, clientY)
+    this.currentFrame = this.isPointInside(clientX, clientY)
       ? MouseState.Over
       : MouseState.Out;
   };
