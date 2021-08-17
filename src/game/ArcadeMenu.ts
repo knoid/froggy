@@ -1,13 +1,13 @@
 import AlphaPicture from "./AlphaPicture";
+import between from "./between";
 import Button from "./Button";
-import { WIN_WIDTH } from "./constants";
-import Stage from "./Stage";
+import Level from "./Level";
 import MainMenu from "./MainMenu";
 import Picture from "./Picture";
 import Resources from "./Resources";
 import Scene from "./Scene";
+import Stage from "./Stage";
 import Temple from "./Temple";
-import Level from "./Level";
 
 export default class ArcadeMenu extends Scene {
   private mainMenuButton: Button;
@@ -81,11 +81,10 @@ export default class ArcadeMenu extends Scene {
   }
 
   logic(timeDiff: number): void {
+    const skyWidth = this.sky[0].width;
+    const movement = timeDiff * 0.02;
     for (const sky of this.sky) {
-      sky.x += timeDiff * 0.02;
-      if (sky.x > WIN_WIDTH) {
-        sky.x -= sky.width * 2;
-      }
+      sky.x = between(-skyWidth, skyWidth, sky.x + movement);
     }
   }
 

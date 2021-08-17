@@ -1,3 +1,4 @@
+import between from "./between";
 import Drawable from "./Drawable";
 
 // disabling `any` warning, this follows the Mixins documentation.
@@ -19,7 +20,7 @@ export default function Rotatable<
     private _rotation = 0;
 
     set rotation(radians: number) {
-      this._rotation = radians % (2 * Math.PI);
+      this._rotation = between(0, Math.PI * 2, radians);
     }
 
     get rotation() {

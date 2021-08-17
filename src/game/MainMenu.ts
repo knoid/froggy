@@ -1,7 +1,7 @@
 import AlphaPicture from "./AlphaPicture";
 import ArcadeMenu from "./ArcadeMenu";
+import between from "./between";
 import Button from "./Button";
-import { WIN_WIDTH } from "./constants";
 import FrogEyes from "./FrogEyes";
 import OptionsDialog from "./OptionsDialog";
 import Picture from "./Picture";
@@ -63,11 +63,10 @@ export default class MainMenu extends Scene {
   }
 
   logic(timeDiff: number): void {
+    const skyWidth = this.sky[0].width;
+    const movement = timeDiff * 0.02;
     for (const sky of this.sky) {
-      sky.x += timeDiff * 0.02;
-      if (sky.x > WIN_WIDTH) {
-        sky.x -= sky.width * 3;
-      }
+      sky.x = between(-skyWidth, skyWidth * 2, sky.x + movement);
     }
 
     this.sunGlow.rotation += timeDiff * 0.0008;
