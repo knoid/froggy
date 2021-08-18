@@ -5,7 +5,7 @@ import TreasurePoint from "./TreasurePoint";
 
 export default class Graphics {
   curve: string;
-  curve2: string;
+  curve2?: string;
   image: string;
   displayName: string;
   gx: number;

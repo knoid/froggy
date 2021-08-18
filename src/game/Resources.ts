@@ -1,6 +1,7 @@
-import JSZip from "jszip";
-import parseCurve, { Curve } from "../shared/parseCurve";
+import JSZip, { JSZipObject } from "jszip";
+import parseCurve, { CurvePoints } from "../shared/parseCurve";
 import { logger } from "./constants";
+import Curve from "./Curve";
 import Emitter from "./Emitter";
 import Font from "./Font";
 import Graphics from "./levels/Graphics";
@@ -30,7 +31,7 @@ const fontsPathRegex = /^(fonts)\/(.+)\.txt$/i;
 const curvePathRegex = /^(levels)\/(.+)\.dat$/i;
 
 export default class Resources {
-  curves: Record<string, Curve> = {};
+  private curves: Record<string, CurvePoints> = {};
   // @ts-expect-error it will be populated before usage
   fonts: Record<FontName, Font> = {};
   private freeCanvases: HTMLCanvasElement[] = [];
@@ -44,7 +45,7 @@ export default class Resources {
   constructor(private fs: JSZip) {}
 
   curve(name: string): Curve {
-    return this.curves[name.toLowerCase()];
+    return new Curve(this.curves[name.toLowerCase()]);
   }
 
   image(name: string): HTMLImageElement {
@@ -73,11 +74,10 @@ export default class Resources {
     return ctx;
   }
 
-  async loadCurve(curveName: string): Promise<Curve> {
-    const datContents = await this.fs
-      .file(`level/${curveName}/${curveName}.dat`)
-      .async("arraybuffer");
-    return parseCurve(datContents);
+  async loadCurve(curveFile: JSZipObject): Promise<void> {
+    const curveId = curveFile.name.match(curvePathRegex)[2];
+    const fileContents = await curveFile.async("arraybuffer");
+    this.curves[curveId.toLowerCase()] = parseCurve(fileContents);
   }
 
   async loadFont(fontName: FontName): Promise<Font> {
@@ -185,9 +185,7 @@ export default class Resources {
       )
       .then(() =>
         this.serialLoader(curves, async (curveFile) => {
-          const curveId = curveFile.name.match(curvePathRegex)[2];
-          const fileContents = await curveFile.async("arraybuffer");
-          this.curves[curveId.toLowerCase()] = parseCurve(fileContents);
+          await this.loadCurve(curveFile);
           dispatchProgress();
         })
       )

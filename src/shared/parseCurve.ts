@@ -4,10 +4,10 @@
  * [1]: https://hclxing.wordpress.com/2017/06/27/reverse-engineering-zuma-deluxes-level-file/
  */
 
-type Coords2D = [number, number];
-export type Curve = Coords2D[];
+export type Coords2D = [number, number];
+export type CurvePoints = Coords2D[];
 
-export default function parseCurve(fileContents: ArrayBuffer): Curve {
+export default function parseCurve(fileContents: ArrayBuffer): CurvePoints {
   const data = new DataView(fileContents);
 
   const header = String.fromCharCode(

@@ -1,4 +1,5 @@
 import AlphaPicture from "./AlphaPicture";
+import { AlphaAnimation, Orientation } from "./Animation";
 import ArcadeMenu from "./ArcadeMenu";
 import Button from "./Button";
 import Frog from "./Frog";
@@ -16,6 +17,32 @@ export default class Level extends Scene {
     const scenarioId = resources.levels.stages[stage][0];
     const graphics = resources.levels.graphics[scenarioId];
 
+    const pitCoverCenter = resources.image("pitCover").width / 2;
+    const holeCenter = resources.image("hole").width / 2;
+    const pitCovers = [graphics.curve, graphics.curve2]
+      .filter((curve) => curve)
+      .flatMap((curveId) => {
+        const curve = resources.curve(`${scenarioId}/${curveId}`);
+        const lastPoint = curve.points.slice(-1)[0];
+
+        return [
+          new AlphaPicture(
+            resources,
+            "hole",
+            lastPoint[0] - holeCenter,
+            lastPoint[1] - holeCenter
+          ),
+          new AlphaAnimation(
+            resources,
+            "pitCover",
+            lastPoint[0] - pitCoverCenter,
+            lastPoint[1] - pitCoverCenter,
+            12,
+            Orientation.vertical
+          ),
+        ];
+      });
+
     this.frog = new Frog(resources, graphics.gx, graphics.gy);
 
     this.menuButton = new Button(resources, "menuButton", 538, 3);
@@ -30,6 +57,7 @@ export default class Level extends Scene {
       new AlphaPicture(resources, "toadLives", 26, 3),
       new AlphaPicture(resources, "toadLives", 52, 3),
       this.menuButton,
+      ...pitCovers,
     ]);
   }
 
