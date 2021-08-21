@@ -108,6 +108,7 @@ class BasePicture extends Emitter<EventsMap> implements Drawable {
   }
 
   remove(): void {
+    log("remove");
     if (this.context2d) {
       this.resources.freeCanvas(this.context2d);
     }

@@ -59,9 +59,4 @@ export default class Frog extends Scene {
       this.hatchBack,
     ]);
   }
-
-  remove(): void {
-    super.remove();
-    this.hatchBack.remove();
-  }
 }

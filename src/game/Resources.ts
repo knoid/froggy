@@ -56,6 +56,10 @@ export default class Resources {
     context2d.canvas.width = 1;
     context2d.canvas.height = 1;
     context2d.globalCompositeOperation = "source-over";
+    console.assert(
+      !this.freeCanvases.includes(context2d.canvas),
+      "2D context already released"
+    );
     this.freeCanvases.push(context2d.canvas);
   }
 
@@ -68,10 +72,9 @@ export default class Resources {
       log("new canvas");
     }
 
-    const ctx = canvas.getContext("2d");
     canvas.width = width;
     canvas.height = height;
-    return ctx;
+    return canvas.getContext("2d");
   }
 
   async loadCurve(curveFile: JSZipObject): Promise<void> {

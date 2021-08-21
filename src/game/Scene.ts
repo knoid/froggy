@@ -1,6 +1,9 @@
+import { logger } from "./constants";
 import Drawable from "./Drawable";
 import Emitter from "./Emitter";
 import Rotatable from "./Rotatable";
+
+const log = logger.extend("scene");
 
 type EventsMap = {
   click: MouseEvent;
@@ -60,6 +63,7 @@ class BaseScene<ExtraEventsMap = Record<string, never>>
   }
 
   remove(): void {
+    log("remove");
     for (const actor of this.actors) {
       actor.remove();
     }

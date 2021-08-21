@@ -18,7 +18,7 @@ type BasePicture = GConstructor<Picture>;
 
 function Animatable(BasePicture: BasePicture) {
   return class extends BasePicture {
-    protected currentFrame = 0;
+    currentFrame = 0;
 
     constructor(
       resources: Resources,

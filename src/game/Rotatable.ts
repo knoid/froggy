@@ -5,7 +5,7 @@ import Drawable from "./Drawable";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GConstructor<T> = new (...args: any[]) => T;
 
-interface RotatableInstance {
+export interface RotatableInstance {
   pivot: [number, number];
   rotation: number;
 }
@@ -28,19 +28,15 @@ export default function Rotatable<
     }
 
     draw(ctx: CanvasRenderingContext2D, ...args: number[]) {
-      if (this.rotation) {
-        ctx.save();
-        const dim = [this.x + this.pivot[0], this.y + this.pivot[1]];
-        ctx.translate(dim[0], dim[1]);
-        ctx.rotate(this.rotation);
-        ctx.translate(-dim[0], -dim[1]);
-      }
+      ctx.save();
+      const dim = [this.x + this.pivot[0], this.y + this.pivot[1]];
+      ctx.translate(dim[0], dim[1]);
+      ctx.rotate(this.rotation);
+      ctx.translate(-dim[0], -dim[1]);
 
       super.draw(ctx, ...args);
 
-      if (this.rotation) {
-        ctx.restore();
-      }
+      ctx.restore();
     }
   };
 }
