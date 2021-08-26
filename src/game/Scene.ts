@@ -42,6 +42,12 @@ class BaseScene<ExtraEventsMap = Record<string, never>>
     this.actors.splice(this.actors.length - 1 - priority, 0, ...actors);
   }
 
+  removeActor(actor: Drawable): void {
+    const actorPosition = this.actors.indexOf(actor);
+    console.assert(actorPosition >= 0, "Actor doesn't exist in actors list");
+    this.actors.splice(actorPosition, 1);
+  }
+
   draw(ctx: CanvasRenderingContext2D, x = this.x, y = this.y): void {
     ctx.save();
     ctx.translate(x, y);

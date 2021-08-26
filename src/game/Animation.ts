@@ -25,7 +25,7 @@ function Animatable(BasePicture: BasePicture) {
       colorImage: string,
       x: number,
       y: number,
-      protected framesCount: number,
+      public readonly framesCount: number,
       protected orientation: Orientation
     ) {
       super(resources, colorImage, x, y);

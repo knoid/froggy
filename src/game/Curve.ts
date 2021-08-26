@@ -14,7 +14,8 @@ export default class Curve {
       ];
       this.points.push(newPoint);
       this.angles.push(
-        Math.atan2(lastPoint[0] - newPoint[0], lastPoint[1] - newPoint[1])
+        Math.atan2(lastPoint[1] - newPoint[1], lastPoint[0] - newPoint[0]) +
+          Math.PI / 2
       );
       lastPoint = newPoint;
     }

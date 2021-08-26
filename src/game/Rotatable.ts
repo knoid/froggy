@@ -27,14 +27,22 @@ export default function Rotatable<
       return this._rotation;
     }
 
-    draw(ctx: CanvasRenderingContext2D, ...args: number[]) {
+    draw(
+      ctx: CanvasRenderingContext2D,
+      sx?: number,
+      sy?: number,
+      width?: number,
+      height?: number,
+      x = this.x,
+      y = this.y
+    ) {
       ctx.save();
-      const dim = [this.x + this.pivot[0], this.y + this.pivot[1]];
+      const dim = [x + this.pivot[0], y + this.pivot[1]];
       ctx.translate(dim[0], dim[1]);
       ctx.rotate(this.rotation);
       ctx.translate(-dim[0], -dim[1]);
 
-      super.draw(ctx, ...args);
+      super.draw(ctx, sx, sy, width, height, x, y);
 
       ctx.restore();
     }

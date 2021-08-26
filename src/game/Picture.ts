@@ -29,15 +29,17 @@ class BasePicture extends Emitter<EventsMap> implements Drawable {
   pointerEvents = PointerEvents.All;
   protected context2d: CanvasRenderingContext2D | null = null;
   protected image: ImageSource;
+  _resources: Resources;
 
   constructor(
-    protected resources: Resources,
+    resources: Resources,
     image: string | ImageSource,
     public x = 0,
     public y = 0
   ) {
     super();
     this.image = typeof image === "string" ? resources.image(image) : image;
+    this._resources = resources;
   }
 
   get width(): number {
@@ -68,7 +70,7 @@ class BasePicture extends Emitter<EventsMap> implements Drawable {
   fill(color: RGB): this {
     log("fill %o", color);
     const { width, height } = this.image;
-    const ctx = this.resources.getCanvas(width, height);
+    const ctx = this._resources.getCanvas(width, height);
     ctx.drawImage(this.image, 0, 0);
     const imageData = ctx.getImageData(0, 0, width, height);
 
@@ -83,7 +85,7 @@ class BasePicture extends Emitter<EventsMap> implements Drawable {
     ctx.putImageData(imageData, 0, 0);
     this.image = ctx.canvas;
     if (this.context2d) {
-      this.resources.freeCanvas(this.context2d);
+      this._resources.freeCanvas(this.context2d);
     }
     this.context2d = ctx;
     return this;
@@ -110,7 +112,7 @@ class BasePicture extends Emitter<EventsMap> implements Drawable {
   remove(): void {
     log("remove");
     if (this.context2d) {
-      this.resources.freeCanvas(this.context2d);
+      this._resources.freeCanvas(this.context2d);
     }
   }
 }

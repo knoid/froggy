@@ -5,6 +5,7 @@ import Curve from "./Curve";
 import Emitter from "./Emitter";
 import Font from "./Font";
 import Graphics from "./levels/Graphics";
+import Settings from "./levels/Settings";
 
 const log = logger.extend("resources");
 
@@ -39,6 +40,7 @@ export default class Resources {
   levels: {
     difficulty: string[][];
     graphics: Record<string, Graphics>;
+    settings: Record<string, Settings>;
     stages: string[][];
   };
 
@@ -154,7 +156,14 @@ export default class Resources {
     for (const graphicsElement of Array.from(graphicsElements)) {
       graphics[graphicsElement.id] = new Graphics(graphicsElement);
     }
-    this.levels = { graphics, stages, difficulty };
+
+    const settingsElements = xml.getElementsByTagName("settings");
+    const settings: Record<string, Settings> = {};
+    for (const settingsElement of Array.from(settingsElements)) {
+      settings[settingsElement.id] = new Settings(settingsElement);
+    }
+
+    this.levels = { difficulty, graphics, settings, stages };
   }
 
   loadAll(): Emitter<LoaderEventMap> {

@@ -1,8 +1,8 @@
-import { Orientation } from "./Animation";
-import Curve from "./Curve";
-import { AnimationOnCurve } from "./OnCurve";
-import Resources from "./Resources";
-import Scene from "./Scene";
+import { Orientation } from "../Animation";
+import Curve from "../Curve";
+import { AnimationOnCurve } from "../OnCurve";
+import Resources from "../Resources";
+import Scene from "../Scene";
 
 const sparklesSpeed = 15;
 const totalSparkles = 28;

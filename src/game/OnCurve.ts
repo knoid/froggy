@@ -16,7 +16,7 @@ function OverCurved<R extends RotatableInstance & Drawable>(
     constructor(
       resources: Resources,
       colorImage: string,
-      private curve: Curve,
+      protected curve: Curve,
       framesCount: number,
       orientation: Orientation
     ) {
@@ -33,14 +33,23 @@ function OverCurved<R extends RotatableInstance & Drawable>(
 
     set position(value: number) {
       this._position = value;
+      const fixedValue = Math.floor(value);
       const { points } = this.curve;
-      this.x = value < points.length ? points[value][0] : NaN;
-      this.y = value < points.length ? points[value][1] : NaN;
+      this.x = value < points.length ? points[fixedValue][0] : NaN;
+      this.y = value < points.length ? points[fixedValue][1] : NaN;
     }
 
-    draw(ctx: CanvasRenderingContext2D, sx?: number, sy?: number): void {
+    draw(
+      ctx: CanvasRenderingContext2D,
+      sx?: number,
+      sy?: number,
+      width?: number,
+      height?: number,
+      x?: number,
+      y?: number
+    ): void {
       ctx.translate(-this.pivot[0], -this.pivot[1]);
-      super.draw(ctx, sx, sy);
+      super.draw(ctx, sx, sy, width, height, x, y);
       ctx.translate(this.pivot[0], this.pivot[1]);
     }
   };

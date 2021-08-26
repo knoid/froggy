@@ -41,7 +41,7 @@ class HatchBack extends Picture {
 
   remove() {
     super.remove();
-    this.resources.freeCanvas(this.alphaContext);
+    this._resources.freeCanvas(this.alphaContext);
   }
 }
 export default class Frog extends Scene {
